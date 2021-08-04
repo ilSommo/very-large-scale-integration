@@ -17,15 +17,18 @@ VERSION := $(subst hotfix-,, $(BRANCH))
 endif
 
 bump:
-	sed -i '' 's/__version__ = .*/__version__ = '\'$(VERSION)\''/' **/*.py
-	autopep8 -i -a -a **.*py
-	pdoc -o ./docs --docformat numpy very-large-scale-integration
+<<<<<<< HEAD
+=======
+	#sed -i '' 's/__version__ = .*/__version__ = '\'$(VERSION)\''/' **/*.py
+	#autopep8 -i -a -a **.*py
+	#pdoc -o ./docs --docformat numpy very-large-scale-integration
+>>>>>>> release-0.1.1
 	pipenv lock
 	git add .
-	git commit -m "Bump version number to "$(VERSION)""
+	git commit -m "Bump version number to $(VERSION)"
 	git checkout master
-	git merge BRANCH
+	git merge $(BRANCH)
 	git tag $(VERSION)
 	git checkout develop
-	git merge BRANCH
-	git branch -d BRANCH
+	git merge $(BRANCH)
+	git branch -d $(BRANCH)
