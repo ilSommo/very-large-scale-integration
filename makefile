@@ -17,12 +17,9 @@ VERSION := $(subst hotfix-,, $(BRANCH))
 endif
 
 bump:
-<<<<<<< HEAD
-=======
 	#sed -i '' 's/__version__ = .*/__version__ = '\'$(VERSION)\''/' **/*.py
 	#autopep8 -i -a -a **.*py
 	#pdoc -o ./docs --docformat numpy very-large-scale-integration
->>>>>>> release-0.1.1
 	pipenv lock
 	git add .
 	git commit -m "Bump version number to $(VERSION)"
