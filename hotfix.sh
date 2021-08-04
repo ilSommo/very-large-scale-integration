@@ -2,7 +2,7 @@
 
 sed -i '' 's/__version__ = .*/__version__ = '\'$1\''/' **/*.py
 
-#autopep8 -i -a -a **.*py
+autopep8 -i -a -a **.*py
 
 #pdoc -o ./docs --docformat numpy very-large-scale-integration
 
