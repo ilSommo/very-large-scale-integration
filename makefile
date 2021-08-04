@@ -22,7 +22,7 @@ bump:
 	#pdoc -o ./docs --docformat numpy very-large-scale-integration
 	pipenv lock
 	git add .
-	git commit -m "Bump version number to$(VERSION)"
+	git commit -m "Bump version number to $(VERSION)"
 	git checkout master
 	git merge $(BRANCH)
 	git tag $(VERSION)
