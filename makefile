@@ -11,9 +11,9 @@ dev:
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 ifneq (,$(findstring release-,$(BRANCH)))
-VERSION := $(subst release-,, $(BRANCH))
+VERSION := $(subst release-,,$(BRANCH))
 else ifneq (,$(findstring hotfix-,$(BRANCH)))
-VERSION := $(subst hotfix-,, $(BRANCH))
+VERSION := $(subst hotfix-,,$(BRANCH))
 endif
 
 bump:
@@ -22,7 +22,7 @@ bump:
 	#pdoc -o ./docs --docformat numpy very-large-scale-integration
 	pipenv lock
 	git add .
-	git commit -m "Bump version number to $(VERSION)"
+	git commit -m "Bump version number to$(VERSION)"
 	git checkout master
 	git merge $(BRANCH)
 	git tag $(VERSION)
