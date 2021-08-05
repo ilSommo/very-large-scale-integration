@@ -52,9 +52,7 @@ var int: chip_h = max(i in 1..n)(bl_y[i] + inst_y[i]);
 
 solve minimize chip_h;
 
-output [
-    "Chip width : ", show(chip_w), "\n",
-    "Chip height : ", show(chip_h), "\n",
-    "Corners : ", show(["W:\(inst_x[i]) H:\(inst_y[i]) -> (\(bl_x[i]),\(bl_y[i]))" | i in 1..n]), "\n",
-%    "B : ", show(B), "\n"
-];
+output ["Chip width: \(chip_w)\n"] ++ 
+       ["Chip height: \(chip_h)\n"] ++
+       ["Corners:\n"] ++ ["W:\(inst_x[i]) H:\(inst_y[i]) -> (\(bl_x[i]),\(bl_y[i]))\n" | i in 1..n]
+%       ["B :\n"] ++ ["\(show(B[i,j]) ++ if j mod max_h == 0 then "\t" else "\n" endif)" |i in 1..chip_w, j in 1..max_h]
