@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 z3-solver = "*"
+pygame = "*"
+numpy = "*"
 
 [dev-packages]
 pdoc = "*"
