@@ -8,6 +8,12 @@ dev:
 	pipenv sync --dev
 	pipenv shell
 
+run:
+	python src/ins-json.py
+	$(foreach file, $(wildcard ins/*.json), minizinc --solver Gecode src/m1.mzn ins/ins-$(subst ins/ins-,,$(subst .json,,${file})).json -o out/out-$(subst ins/ins-,,$(subst .json,,${file})).txt --soln-sep "" --search-complete-msg "" --solver-time-limit 300000;)
+	rm ins/*.json
+	python src/printer.py
+
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 ifneq (,$(findstring release-,$(BRANCH)))
