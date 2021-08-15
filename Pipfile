@@ -11,6 +11,7 @@ numpy = "*"
 [dev-packages]
 pdoc = "*"
 autopep8 = "*"
+jupyter = "*"
 
 [requires]
 python_version = "3.9"
