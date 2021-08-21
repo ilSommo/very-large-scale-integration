@@ -56,7 +56,7 @@ constraint symmetry_breaking_constraint(
 var int: chip_h = max(i in 1..n)(bl_y[i] + inst_y[i]);
 
 % Parameters to control the search heuristic and restart strategy
-int: search_type = 5;
+int: search_type = 6;
 int: restart_type = 4;
 
 ann: search_ann = 
@@ -64,23 +64,24 @@ ann: search_ann =
   elseif search_type == 2 then int_search(bl_y, first_fail, indomain_min)
   elseif search_type == 3 then int_search(bl_y, dom_w_deg, indomain_min)
   elseif search_type == 4 then int_search(bl_y, input_order, indomain_random)
+  elseif search_type == 5 then int_search(bl_y, first_fail, indomain_random)
   else int_search(bl_y, dom_w_deg, indomain_random)
   endif;
 
 ann: restart_ann =
-  if restart_type == 1 then restart_constant(250)
-  elseif restart_type == 2 then restart_linear(250)
-  elseif restart_type == 3 then restart_geometric(1.5, 250)
-  else restart_luby(1000)
+  if restart_type == 1 then restart_constant(750)
+  elseif restart_type == 2 then restart_linear(20)
+  elseif restart_type == 3 then restart_geometric(1.5, 500)
+  else restart_luby(250)
   endif;
 
-solve :: search_ann :: restart_ann :: relax_and_reconstruct(bl_y, 85) minimize chip_h;
+solve :: search_ann :: restart_ann :: relax_and_reconstruct(bl_y, 70) minimize chip_h;
 
 %output ["Chip width: \(chip_w)\n"] ++ 
 %       ["Chip height: \(chip_h)\n"] ++
 %       ["Corners:\n"] ++ ["W:\(inst_x[i]) H:\(inst_y[i]) -> (\(bl_x[i]),\(bl_y[i]))\n" | i in 1..n]
 %       ["B :\n"] ++ ["\(show(B[i,j]) ++ if j mod max_h == 0 then "\t" else "\n" endif)" |i in 1..chip_w, j in 1..max_h]
 
-output ["\(chip_w) \(chip_h)\n"] ++
-       ["\(n)\n"] ++
-       ["\(inst_x[i]) \(inst_y[i]) \(bl_x[i]) \(bl_y[i])\n" | i in 1..n]
+%output ["\(chip_w) \(chip_h)\n"] ++
+%       ["\(n)\n"] ++
+%       ["\(inst_x[i]) \(inst_y[i]) \(bl_x[i]) \(bl_y[i])\n" | i in 1..n]
