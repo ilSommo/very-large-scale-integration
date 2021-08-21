@@ -7,5 +7,5 @@ do
     python src/printer.py out/out-$file-cp
     python src/sat.py $file
     python src/printer.py out/out-$file-sat
-    rm file.json
+    rm ins/ins-$file.json
 done
