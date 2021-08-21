@@ -82,6 +82,6 @@ solve :: search_ann :: restart_ann :: relax_and_reconstruct(bl_y, 70) minimize c
 %       ["Corners:\n"] ++ ["W:\(inst_x[i]) H:\(inst_y[i]) -> (\(bl_x[i]),\(bl_y[i]))\n" | i in 1..n]
 %       ["B :\n"] ++ ["\(show(B[i,j]) ++ if j mod max_h == 0 then "\t" else "\n" endif)" |i in 1..chip_w, j in 1..max_h]
 
-output ["\(chip_w) \(chip_h)\n"] ++
-       ["\(n)\n"] ++
-       ["\(inst_x[i]) \(inst_y[i]) \(bl_x[i]) \(bl_y[i])\n" | i in 1..n]
+%output ["\(chip_w) \(chip_h)\n"] ++
+%       ["\(n)\n"] ++
+%       ["\(inst_x[i]) \(inst_y[i]) \(bl_x[i]) \(bl_y[i])\n" | i in 1..n]
