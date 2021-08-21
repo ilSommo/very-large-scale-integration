@@ -5,6 +5,7 @@ import json
 file = str(sys.argv[1])
 
 opt = Optimize()
+opt.set("timeout", 300)
 
 with open('ins/ins-' +file+'.json', 'r') as infile:
     data = json.load(infile)
