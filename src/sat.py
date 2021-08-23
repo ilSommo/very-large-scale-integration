@@ -4,7 +4,7 @@ import time
 def sat(chip_w, n, inst_x, inst_y):
     
     opt = z3.Optimize()
-    opt.set("timeout", 300000)
+    opt.set("timeout", 10000)
 
     max_h = sum(inst_y)
 
@@ -68,13 +68,16 @@ def sat(chip_w, n, inst_x, inst_y):
     model=opt.model()
     result_x=[]
     result_y=[]
-    for k in range(n):
-        for i in range(chip_w):
-            for j in range(model.evaluate(chip_h)):
-                if model.evaluate(corners[i][j][k]) == True:
-                    result_x.append(i)
-                    result_y.append(j)
-                    
-    chip_h_int = int(str(model.evaluate(chip_h)))
-
+    try:
+        for k in range(n):
+            for i in range(chip_w):
+                for j in range(int(str(model.evaluate(chip_h)))):
+                    if model.evaluate(corners[i][j][k]) == True:
+                        result_x.append(i)
+                        result_y.append(j)
+        chip_h_int = int(str(model.evaluate(chip_h)))
+    except:
+        chip_h_int = 0
+    
+                
     return chip_h_int, result_x, result_y, end-start

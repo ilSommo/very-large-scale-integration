@@ -5,12 +5,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Rectangle
 from src.smt import *
+from src.sat import *
 
 MIN = 1
 MAX = 20
 
 CP = True
-SMT = False
+SAT = True
+SMT = True
 
 def plot(file, width, height, blocks):
     _, ax = plt.subplots()
@@ -36,6 +38,7 @@ def plot(file, width, height, blocks):
     plt.close()
 
 times_cp = []
+times_sat = []
 times_smt = []
 model = Model("src/cp.mzn")
 solver = Solver.lookup("chuffed")
@@ -88,18 +91,36 @@ for i in range(MIN,MAX+1):
             times_cp.append(time_cp)
             print("FAIL CP "+str(i))
 
-    if SMT == True:
-        chip_h_smt, bl_x_sat, bl_y_sat, time_smt = smt(chip_w, n, inst_x, inst_y)
-        if chip_h_smt == chip_w:
-            times_smt.append(time_smt)
-            output_sat = str(chip_w) + " " + str(chip_h_smt) + "\n" + str(n) + "\n"
+    if SAT == True:
+        chip_h_sat, bl_x_sat, bl_y_sat, time_sat = sat(chip_w, n, inst_x, inst_y)
+        if chip_h_sat == chip_w:
+            times_sat.append(time_sat)
+            output_sat = str(chip_w) + " " + str(chip_h_sat) + "\n" + str(n) + "\n"
             for j in range(n):
                 output_sat += str(inst_x[j]) + " " + str(inst_y[j]) + " " + str(bl_x_sat[j]) + " " + str(bl_y_sat[j]) + "\n"
 
-            with open('out/out-'+file+'-smt.txt', 'w') as outfile:
+            with open('out/out-'+file+'-sat.txt', 'w') as outfile:
                 outfile.write(output_sat)
 
-            plot(file+'-smt', chip_w, chip_h_smt, [(inst_x[j], inst_y[j], bl_x_sat[j], bl_y_sat[j], tuple(value/255 for value in colorsys.hsv_to_rgb(j/n,0.75,191))) for j in range(n)])
+            plot(file+'-sat', chip_w, chip_h_sat, [(inst_x[j], inst_y[j], bl_x_sat[j], bl_y_sat[j], tuple(value/255 for value in colorsys.hsv_to_rgb(j/n,0.75,191))) for j in range(n)])
+            print("DONE SAT "+str(i)+": "+str(time_sat)+" s")
+        else:
+            time_sat = 0
+            times_sat.append(time_sat)
+            print("FAIL SAT "+str(i))
+
+    if SMT == True:
+        chip_h_smt, bl_x_smt, bl_y_smt, time_smt = smt(chip_w, n, inst_x, inst_y)
+        if chip_h_smt == chip_w:
+            times_smt.append(time_smt)
+            output_smt = str(chip_w) + " " + str(chip_h_smt) + "\n" + str(n) + "\n"
+            for j in range(n):
+                output_smt += str(inst_x[j]) + " " + str(inst_y[j]) + " " + str(bl_x_smt[j]) + " " + str(bl_y_smt[j]) + "\n"
+
+            with open('out/out-'+file+'-smt.txt', 'w') as outfile:
+                outfile.write(output_smt)
+
+            plot(file+'-smt', chip_w, chip_h_smt, [(inst_x[j], inst_y[j], bl_x_smt[j], bl_y_smt[j], tuple(value/255 for value in colorsys.hsv_to_rgb(j/n,0.75,191))) for j in range(n)])
             print("DONE SMT "+str(i)+": "+str(time_smt)+" s")
         else:
             time_smt = 0
@@ -109,9 +130,11 @@ for i in range(MIN,MAX+1):
 
 _, ax = plt.subplots(1,1,figsize=(10,10))
 if CP == True:
-    ax.bar(np.arange(MIN,MAX+1)-0.2,times_cp,0.4,label='cp')
+    ax.bar(np.arange(MIN,MAX+1)-0.3,times_cp,0.3,label='cp')
+if SAT == True:
+    ax.bar(np.arange(MIN,MAX+1),times_sat,0.3,label='sat')
 if SMT == True:
-    ax.bar(np.arange(MIN,MAX+1)+0.2,times_smt,0.4,label='smt')
+    ax.bar(np.arange(MIN,MAX+1)+0.3,times_smt,0.3,label='smt')
 ax.set_xticks(range(MIN,MAX+1))
 ax.set_xlabel('instance')
 ax.set_ylabel('seconds')

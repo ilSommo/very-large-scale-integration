@@ -36,12 +36,7 @@ def smt(chip_w, n, inst_x, inst_y):
         opt.add(chip_h>=bl_y[i] + inst_y[i])
     
     opt.minimize(chip_h)
-<<<<<<< HEAD
     start = time.time() 
-=======
-    
-    start = time.time()
->>>>>>> SAT-gym
     opt.check()
     end = time.time()
     model=opt.model()
