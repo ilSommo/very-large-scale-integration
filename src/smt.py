@@ -2,9 +2,8 @@ import z3
 import time
 
 def smt(chip_w, n, inst_x, inst_y):
-    start = time.time()
     opt = z3.Optimize()
-    opt.set("timeout", 300000)
+    opt.set("timeout", 10000)
 
     max_h = sum(inst_y) - min(inst_y)
 
@@ -37,16 +36,20 @@ def smt(chip_w, n, inst_x, inst_y):
         opt.add(chip_h>=bl_y[i] + inst_y[i])
     
     opt.minimize(chip_h)
-    
+    start = time.time() 
     opt.check()
     end = time.time()
     model=opt.model()
     result_x=[]
     result_y=[]
-    for i in range(n):
-        result_x.append(int(str(model.evaluate(bl_x[i]))))
-        result_y.append(int(str(model.evaluate(bl_y[i]))))
+    try:
+        for i in range(n):
+            result_x.append(int(str(model.evaluate(bl_x[i]))))
+            result_y.append(int(str(model.evaluate(bl_y[i]))))
+        chip_h_int = int(str(model.evaluate(chip_h)))
+    except:
+        chip_h_int = 0
 
-    chip_h_int = int(str(model.evaluate(chip_h)))
+    
 
     return chip_h_int, result_x, result_y, end-start
