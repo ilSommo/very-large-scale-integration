@@ -14,15 +14,18 @@ from vlsi.sat import *
 from vlsi.smt import *
 
 
-TIMEOUT_CP = 60
-TIMEOUT_SAT = 60
-TIMEOUT_SMT = 60
+NORMAL = True
+ROTATION = True
+
+TIMEOUT_CP = 10
+TIMEOUT_SAT = 10
+TIMEOUT_SMT = 10
 
 MIN_CP = 1
 MAX_CP = 5
 
 MIN_SAT = 1
-MAX_SAT = 5
+MAX_SAT = 0
 
 MIN_SMT = 1
 MAX_SMT = 5
@@ -54,7 +57,10 @@ times_cp = []
 times_sat = []
 times_smt = []
 
-model = Model("src/cp.mzn")
+if ROTATION == True:
+    model = Model("src/cp_rotation.mzn") 
+else:
+    model = Model("src/cp.mzn")
 solver = Solver.lookup("chuffed")
 
 for i in range(MIN, MAX + 1):
@@ -108,29 +114,28 @@ for i in range(MIN, MAX + 1):
             chip_h_cp = result["objective"]
             bl_x_cp = result["bl_x"]
             bl_y_cp = result["bl_y"]
+            if ROTATION == True:
+                new_inst_x_cp = result['new_inst_x']
+                new_inst_y_cp = result['new_inst_y']
             if chip_h_cp == chip_w:
                 time_cp = result.statistics["time"].total_seconds()
                 times_cp.append(time_cp)
 
-                output_cp = str(chip_w) + " " + \
-                    str(chip_h_cp) + "\n" + str(n) + "\n"
-                for j in range(n):
-                    output_cp += str(inst_x[j]) + " " + str(inst_y[j]) + \
-                        " " + str(bl_x_cp[j]) + " " + str(bl_y_cp[j]) + "\n"
+                output_cp = str(chip_w) + " " + str(chip_h_cp) + "\n" + str(n) + "\n"
+                if ROTATION == True:
+                    for j in range(n):
+                        output_cp += str(new_inst_x_cp[j]) + " " + str(new_inst_y_cp[j]) + " " + str(bl_x_cp[j]) + " " + str(bl_y_cp[j]) + "\n"
+                else:
+                    for j in range(n):
+                        output_cp += str(inst_x[j]) + " " + str(inst_y[j]) + " " + str(bl_x_cp[j]) + " " + str(bl_y_cp[j]) + "\n"
 
                 with open("out/out-" + file + "-cp.txt", 'w') as outfile:
                     outfile.write(output_cp)
 
-                plot(file + "-cp",
-                     chip_w,
-                     chip_h_cp,
-                     [(inst_x[j],
-                       inst_y[j],
-                         bl_x_cp[j],
-                         bl_y_cp[j],
-                         tuple(value / 255 for value in colorsys.hsv_to_rgb(j / n,
-                                                                            0.75,
-                                                                            191))) for j in range(n)])
+                if ROTATION == True:
+                    plot(file+"-cp", chip_w, chip_h_cp, [(new_inst_x_cp[j], new_inst_y_cp[j], bl_x_cp[j], bl_y_cp[j], tuple(value/255 for value in colorsys.hsv_to_rgb(j/n,0.75,191))) for j in range(n)])
+                else:
+                    plot(file+"-cp", chip_w, chip_h_cp, [(inst_x[j], inst_y[j], bl_x_cp[j], bl_y_cp[j], tuple(value/255 for value in colorsys.hsv_to_rgb(j/n,0.75,191))) for j in range(n)])
                 print("DONE CP " + str(i) + ": " + str(time_cp) + " s")
             else:
                 time_cp = 0
@@ -207,17 +212,18 @@ for i in range(MIN, MAX + 1):
     else:
         times_smt.append(0)
 
-_, ax = plt.subplots(1, 1, figsize=(10, 10))
-ax.bar(np.arange(MIN, MAX + 1) - 0.3, times_cp, 0.3, label="cp")
-ax.bar(np.arange(MIN, MAX + 1), times_sat, 0.3, label="sat")
-ax.bar(np.arange(MIN, MAX + 1) + 0.3, times_smt, 0.3, label="smt")
+_, ax = plt.subplots(1, 1, figsize=(12.8, 7.2))
+ax.set_axisbelow(True)
+ax.bar(np.arange(MIN, MAX + 1) - 0.15, times_cp, 0.15, label="cp")
+ax.bar(np.arange(MIN, MAX + 1), times_sat, 0.15, label="sat")
+ax.bar(np.arange(MIN, MAX + 1) + 0.15, times_smt, 0.15, label="smt")
+ax.grid(axis='y', which='both')
 ax.set_xticks(range(MIN, MAX + 1))
 ax.set_xlabel("instance")
 ax.set_ylabel("seconds")
 plt.yscale('log')
 ax.set_ylim(top=max(TIMEOUT_CP, TIMEOUT_SAT, TIMEOUT_SMT))
 plt.tick_params(axis='y', which='both')
-plt.grid(axis='y', which='both')
 plt.legend(loc='best')
 plt.title("Times")
 plt.savefig("out/times.png")
