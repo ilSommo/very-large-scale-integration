@@ -15,7 +15,7 @@ def at_least_one(bool_vars):
 def at_most_one(bool_vars):
     return [z3.Not(z3.And(pair[0], pair[1])) for pair in combinations(bool_vars, 2)]
 
-def sat(chip_w, n, inst_x, inst_y, max_h, timeout):
+def sat(chip_w, n, inst_x, inst_y, min_h, max_h, timeout, rotation):
     
     opt = z3.Optimize()
     opt.set("timeout", timeout*1000)
@@ -59,12 +59,12 @@ def sat(chip_w, n, inst_x, inst_y, max_h, timeout):
     opt.minimize(chip_h)
     
     start = time.time()
-    opt.check()
+    check = opt.check()
     end = time.time()
     model=opt.model()
     result_x=[]
     result_y=[]
-    try:
+    if check == z3.sat:
         for k in range(n):
             for i in range(chip_w):
                 for j in range(int(str(model.evaluate(chip_h)))):
@@ -72,7 +72,7 @@ def sat(chip_w, n, inst_x, inst_y, max_h, timeout):
                         result_x.append(i)
                         result_y.append(j)
         chip_h_int = int(str(model.evaluate(chip_h)))
-    except:
-        chip_h_int = 0
+    else:
+        chip_h_int = None
            
     return chip_h_int, result_x, result_y, end-start

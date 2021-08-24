@@ -6,15 +6,25 @@ int: n; % Number of circuits
 set of int: RANGE = 1..n;
 array[RANGE] of int: inst_x; % Horizontal dimension of the i-th piece
 array[RANGE] of int: inst_y; % Vertical dimension of the i-th piece
+int: min_h;
 int: max_h;
 % int: max_h = sum(i in RANGE)(inst_y[i]); % Maximum height of the chip
-int: min_h = (sum(i in RANGE)(inst_x[i]*inst_y[i])) div chip_w;
 
+% chip_h as objective function
+var min_h..max_h: chip_h = max(i in RANGE)(bl_y[i] + inst_y[i]);
+% var min_h..max_h: chip_h;
 % Primal problem: the i-th element of each array contains one (X/Y) coordinate of the bottom-left corner of the i-th piece
 array[RANGE] of var 0..(chip_w - min(inst_x)): bl_x;
 array[RANGE] of var 0..(max_h - min(inst_y)): bl_y;
 % Dual problem: each cell in the 2D grid contains the number of the piece it belongs
 % array[1..chip_w, 1..max_h] of var 0..n: B;
+
+int: min_index = arg_min([inst_x[i]*inst_y[i] | i in RANGE]);
+constraint symmetry_breaking_constraint(
+    (bl_x[min_index] + (inst_x[min_index] div 2) <= chip_w div 2) /\ (bl_y[min_index] + (inst_y[min_index] div 2) <= chip_h div 2)
+);
+
+
 
 % Channelling constraint
 % constraint forall(i in 1..chip_w, j in 1..max_h, v in RANGE) (
@@ -57,9 +67,6 @@ constraint cumulative(bl_x, inst_x, inst_y, max_h);
 %   /\ lex_greatereq(array1d(B), [B[i, j] | i in 1..chip_w, j in reverse(1..max_h)]) % horizontal flip
 %   /\ lex_greatereq(array1d(B), [B[i, j] | i in reverse(1..chip_w), j in reverse(1..max_h)]) % vertical + horizontal flip
 % );
-
-% chip_h as objective function
-var min_h..max_h: chip_h = max(i in RANGE)(bl_y[i] + inst_y[i]);
 
 % Parameters to control the search heuristic and restart strategy
 int: search_type = 2;
