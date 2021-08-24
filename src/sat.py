@@ -9,14 +9,14 @@ def at_least_one(bool_vars):
 def at_most_one(bool_vars):
     return [z3.Not(z3.And(pair[0], pair[1])) for pair in combinations(bool_vars, 2)]
 
-def sat(chip_w, n, inst_x, inst_y, timeout):
+def sat(chip_w, n, inst_x, inst_y, max_h, timeout):
     
     opt = z3.Optimize()
     opt.set("timeout", timeout*1000)
     
     chip_h = z3.Int('chip_h')
 
-    max_h = sum(inst_y)
+    #max_h = sum(inst_y)
 
     chip = np.empty((chip_w,max_h,n),dtype=z3.BoolRef)
     corners = np.empty((chip_w,max_h,n),dtype=z3.BoolRef)

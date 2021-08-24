@@ -1,39 +1,35 @@
 import z3
 import time
 
-def smt(chip_w, n, inst_x, inst_y, timeout):
+def smt(chip_w, n, inst_x, inst_y, max_h, timeout):
     opt = z3.Optimize()
     opt.set("timeout", timeout*1000)
+    chip_h = z3.Int('chip_h')
 
-    max_h = sum(inst_y) - min(inst_y)
+    total_area = 0
 
     bl_x = z3.IntVector('bl_x', n)
     bl_y = z3.IntVector('bl_y', n)
-    b = [[z3.Int("b_%s_%s" % (i, j)) for j in range(max_h) ] for i in range(chip_w)]
 
-    for x, y in zip(bl_x, bl_y):
-        opt.add(x >=0)
-        opt.add(x <= chip_w - min(inst_x))
-        opt.add(y >=0)
-        opt.add(y <= chip_w - min(inst_y))
+    for k in range(n):
+        total_area += inst_x[k]*inst_y[k]
+        opt.add(bl_x[k] >=0)
+        opt.add(bl_x[k] <= chip_w - min(inst_x))
+        opt.add(bl_y[k] >=0)
+        opt.add(bl_y[k] <= chip_w - min(inst_y))
+        # boundary check
+        opt.add(bl_x[k]+inst_x[k] <= chip_w)
+        # chip_h definition
+        opt.add(chip_h>=bl_y[k] + inst_y[k])
+        for l in range(n):
+            if k != l:
+                opt.add(z3.Or((bl_x[l]+inst_x[l] <= bl_x[k]),(bl_x[l] >= bl_x[k]+inst_x[k]),(bl_y[l]+inst_y[l] <= bl_y[k]),(bl_y[l] >= bl_y[k]+inst_y[k])))
 
-    for row in b:
-        for elem in row:
-            opt.add(elem >= 0)
-            opt.add(elem <= n)
+    min_h = total_area / chip_w
 
-    for i in range(chip_w):
-        for j in range(max_h):
-            for v in range(n):
-                opt.add((b[i][j] == v) == z3.And(i>bl_x[v], i<=bl_x[v]+inst_x[v], j>bl_y[v], j<=bl_y[v]+inst_y[v]))
-
-    for i in range(n):
-        opt.add(bl_x[i]+inst_x[i] <= chip_w)
-
-    chip_h = z3.Int('chip_h')
-
-    for i in range(n):
-        opt.add(chip_h>=bl_y[i] + inst_y[i])
+    opt.add(chip_h <= max_h)
+    opt.add(chip_h >= min_h)
+    
     
     opt.minimize(chip_h)
     start = time.time() 
@@ -43,9 +39,9 @@ def smt(chip_w, n, inst_x, inst_y, timeout):
     result_x=[]
     result_y=[]
     try:
-        for i in range(n):
-            result_x.append(int(str(model.evaluate(bl_x[i]))))
-            result_y.append(int(str(model.evaluate(bl_y[i]))))
+        for k in range(n):
+            result_x.append(int(str(model.evaluate(bl_x[k]))))
+            result_y.append(int(str(model.evaluate(bl_y[k]))))
         chip_h_int = int(str(model.evaluate(chip_h)))
     except:
         chip_h_int = 0

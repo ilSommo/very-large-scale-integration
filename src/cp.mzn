@@ -6,7 +6,8 @@ int: n; % Number of circuits
 set of int: RANGE = 1..n;
 array[RANGE] of int: inst_x; % Horizontal dimension of the i-th piece
 array[RANGE] of int: inst_y; % Vertical dimension of the i-th piece
-int: max_h = sum(i in RANGE)(inst_y[i]); % Maximum height of the chip
+int: max_h;
+% int: max_h = sum(i in RANGE)(inst_y[i]); % Maximum height of the chip
 int: min_h = (sum(i in RANGE)(inst_x[i]*inst_y[i])) div chip_w;
 
 % Primal problem: the i-th element of each array contains one (X/Y) coordinate of the bottom-left corner of the i-th piece

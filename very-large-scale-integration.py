@@ -7,18 +7,18 @@ from matplotlib.patches import Rectangle
 from src.smt import *
 from src.sat import *
 
-TIMEOUT_CP = 10
-TIMEOUT_SAT = 60
+TIMEOUT_CP = 60
+TIMEOUT_SAT = 10
 TIMEOUT_SMT = 60
 
-MIN_CP = 0
-MAX_CP = 0
+MIN_CP = 1
+MAX_CP = 20
 
-MIN_SAT = 1
-MAX_SAT = 3
+MIN_SAT = 0
+MAX_SAT = 0
 
-MIN_SMT = 0
-MAX_SMT = 0
+MIN_SMT = 1
+MAX_SMT = 20
 
 def plot(file, width, height, blocks):
     _, ax = plt.subplots()
@@ -66,12 +66,33 @@ for i in range(MIN,MAX+1):
             inst_y.append(int(line_split[1]))
             line = infile.readline()
 
+    max_h = 0
+    inst = zip(inst_x,inst_y)
+    while inst:
+        inst = sorted(inst, key=lambda tup: tup[0], reverse=True)
+        inst = sorted(inst, key=lambda tup: tup[1], reverse=True)
+        chip_cumulative = chip_w
+        tiles = 0
+        k = 0
+        heights = []
+        while k < len(inst):
+            if inst[k][0] <= chip_cumulative:
+                chip_cumulative -= inst[k][0]
+                tiles += 1
+                heights.append(inst[k][1])
+                del inst[k]
+            else:
+                k += 1
+        max_h += max(heights)
+    print(sum(inst_y)-min(inst_y),max_h)
+    
     if i in range(MIN_CP, MAX_CP+1):
         instance = Instance(solver, model)
         instance['chip_w'] = chip_w
         instance['n'] = n
         instance['inst_x'] = inst_x
         instance['inst_y'] = inst_y
+        instance['max_h'] =max_h
 
         result = instance.solve(timeout=datetime.timedelta(seconds=TIMEOUT_CP),optimisation_level=5,free_search=True)
 
@@ -104,7 +125,7 @@ for i in range(MIN,MAX+1):
         times_cp.append(0)
 
     if i in range(MIN_SAT, MAX_SAT+1):
-        chip_h_sat, bl_x_sat, bl_y_sat, time_sat = sat(chip_w, n, inst_x, inst_y, TIMEOUT_SAT)
+        chip_h_sat, bl_x_sat, bl_y_sat, time_sat = sat(chip_w, n, inst_x, inst_y, max_h, TIMEOUT_SAT)
         if chip_h_sat == chip_w:
             times_sat.append(time_sat)
             output_sat = str(chip_w) + " " + str(chip_h_sat) + "\n" + str(n) + "\n"
@@ -124,7 +145,7 @@ for i in range(MIN,MAX+1):
         times_sat.append(0)
 
     if i in range(MIN_SMT, MAX_SMT+1):
-        chip_h_smt, bl_x_smt, bl_y_smt, time_smt = smt(chip_w, n, inst_x, inst_y, TIMEOUT_SMT)
+        chip_h_smt, bl_x_smt, bl_y_smt, time_smt = smt(chip_w, n, inst_x, inst_y, max_h,TIMEOUT_SMT)
         if chip_h_smt == chip_w:
             times_smt.append(time_smt)
             output_smt = str(chip_w) + " " + str(chip_h_smt) + "\n" + str(n) + "\n"
