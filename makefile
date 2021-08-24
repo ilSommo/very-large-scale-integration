@@ -17,6 +17,7 @@ VERSION := $(subst hotfix-,,$(BRANCH))
 endif
 
 bump:
+	sed -i '' 's/__version__ = .*/__version__ = '\'$(VERSION)\''/' *.py
 	sed -i '' 's/__version__ = .*/__version__ = '\'$(VERSION)\''/' **/*.py
 	autopep8 -i -a -a **.*py
 	#pdoc -o ./docs --docformat numpy very-large-scale-integration
