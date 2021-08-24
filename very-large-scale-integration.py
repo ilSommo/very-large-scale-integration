@@ -1,4 +1,4 @@
-__version__ = '0.1.1'
+__version__ = '1.0.0-beta.1'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
 
@@ -57,8 +57,8 @@ times_cp = []
 times_sat = []
 times_smt = []
 
-if ROTATION == True:
-    model = Model("src/cp_rotation.mzn") 
+if ROTATION:
+    model = Model("src/cp_rotation.mzn")
 else:
     model = Model("src/cp.mzn")
 solver = Solver.lookup("chuffed")
@@ -114,28 +114,49 @@ for i in range(MIN, MAX + 1):
             chip_h_cp = result["objective"]
             bl_x_cp = result["bl_x"]
             bl_y_cp = result["bl_y"]
-            if ROTATION == True:
+            if ROTATION:
                 new_inst_x_cp = result['new_inst_x']
                 new_inst_y_cp = result['new_inst_y']
             if chip_h_cp == chip_w:
                 time_cp = result.statistics["time"].total_seconds()
                 times_cp.append(time_cp)
 
-                output_cp = str(chip_w) + " " + str(chip_h_cp) + "\n" + str(n) + "\n"
-                if ROTATION == True:
+                output_cp = str(chip_w) + " " + \
+                    str(chip_h_cp) + "\n" + str(n) + "\n"
+                if ROTATION:
                     for j in range(n):
-                        output_cp += str(new_inst_x_cp[j]) + " " + str(new_inst_y_cp[j]) + " " + str(bl_x_cp[j]) + " " + str(bl_y_cp[j]) + "\n"
+                        output_cp += str(new_inst_x_cp[j]) + " " + str(
+                            new_inst_y_cp[j]) + " " + str(bl_x_cp[j]) + " " + str(bl_y_cp[j]) + "\n"
                 else:
                     for j in range(n):
-                        output_cp += str(inst_x[j]) + " " + str(inst_y[j]) + " " + str(bl_x_cp[j]) + " " + str(bl_y_cp[j]) + "\n"
+                        output_cp += str(inst_x[j]) + " " + str(inst_y[j]) + \
+                            " " + str(bl_x_cp[j]) + " " + str(bl_y_cp[j]) + "\n"
 
                 with open("out/out-" + file + "-cp.txt", 'w') as outfile:
                     outfile.write(output_cp)
 
-                if ROTATION == True:
-                    plot(file+"-cp", chip_w, chip_h_cp, [(new_inst_x_cp[j], new_inst_y_cp[j], bl_x_cp[j], bl_y_cp[j], tuple(value/255 for value in colorsys.hsv_to_rgb(j/n,0.75,191))) for j in range(n)])
+                if ROTATION:
+                    plot(file + "-cp",
+                         chip_w,
+                         chip_h_cp,
+                         [(new_inst_x_cp[j],
+                           new_inst_y_cp[j],
+                             bl_x_cp[j],
+                             bl_y_cp[j],
+                             tuple(value / 255 for value in colorsys.hsv_to_rgb(j / n,
+                                                                                0.75,
+                                                                                191))) for j in range(n)])
                 else:
-                    plot(file+"-cp", chip_w, chip_h_cp, [(inst_x[j], inst_y[j], bl_x_cp[j], bl_y_cp[j], tuple(value/255 for value in colorsys.hsv_to_rgb(j/n,0.75,191))) for j in range(n)])
+                    plot(file + "-cp",
+                         chip_w,
+                         chip_h_cp,
+                         [(inst_x[j],
+                           inst_y[j],
+                             bl_x_cp[j],
+                             bl_y_cp[j],
+                             tuple(value / 255 for value in colorsys.hsv_to_rgb(j / n,
+                                                                                0.75,
+                                                                                191))) for j in range(n)])
                 print("DONE CP " + str(i) + ": " + str(time_cp) + " s")
             else:
                 time_cp = 0
