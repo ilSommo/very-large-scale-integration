@@ -1,7 +1,13 @@
-import z3
-import time
-import numpy as np
+__version__ = '1.0.0-beta'
+__author__ = 'Giacomo Berselli, Martino Pulici'
+
+
 from itertools import combinations
+import time
+
+import numpy as np
+import z3
+
 
 def at_least_one(bool_vars):
     return z3.Or(bool_vars)
@@ -14,10 +20,8 @@ def sat(chip_w, n, inst_x, inst_y, max_h, timeout):
     opt = z3.Optimize()
     opt.set("timeout", timeout*1000)
     
-    chip_h = z3.Int('chip_h')
-
-    #max_h = sum(inst_y)
-
+    chip_h = z3.Int("chip_h")
+    
     chip = np.empty((chip_w,max_h,n),dtype=z3.BoolRef)
     corners = np.empty((chip_w,max_h,n),dtype=z3.BoolRef)
 
@@ -26,8 +30,8 @@ def sat(chip_w, n, inst_x, inst_y, max_h, timeout):
             temp_chip = []
             temp_corners = []
             for k in range(n):
-                chip[i][j][k] = z3.Bool('chip_'+str(i)+'_'+str(j)+'_'+str(k))
-                corners[i][j][k] = z3.Bool('corners_'+str(i)+'_'+str(j)+'_'+str(k))
+                chip[i][j][k] = z3.Bool("chip_"+str(i)+"_"+str(j)+"_"+str(k))
+                corners[i][j][k] = z3.Bool("corners_"+str(i)+"_"+str(j)+"_"+str(k))
                 opt.add(z3.Or(z3.Not(corners[i][j][k]),chip[i][j][k]))
                 opt.add(z3.Or(z3.Not(corners[i][j][k]),z3.And(i<=chip_w-inst_x[k],j<=max_h-inst_y[k])))
                 opt.add(z3.Or(z3.Not(corners[i][j][k]),chip_h>=j + inst_y[k]))
@@ -70,6 +74,5 @@ def sat(chip_w, n, inst_x, inst_y, max_h, timeout):
         chip_h_int = int(str(model.evaluate(chip_h)))
     except:
         chip_h_int = 0
-    
-                
+           
     return chip_h_int, result_x, result_y, end-start
