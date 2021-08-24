@@ -1,9 +1,9 @@
 import z3
 import time
 
-def smt(chip_w, n, inst_x, inst_y):
+def smt(chip_w, n, inst_x, inst_y, timeout):
     opt = z3.Optimize()
-    opt.set("timeout", 10000)
+    opt.set("timeout", timeout*1000)
 
     max_h = sum(inst_y) - min(inst_y)
 

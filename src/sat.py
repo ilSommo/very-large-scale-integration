@@ -1,66 +1,58 @@
 import z3
 import time
+import numpy as np
+from itertools import combinations
 
-def sat(chip_w, n, inst_x, inst_y):
+def at_least_one(bool_vars):
+    return z3.Or(bool_vars)
+
+def at_most_one(bool_vars):
+    return [z3.Not(z3.And(pair[0], pair[1])) for pair in combinations(bool_vars, 2)]
+
+def sat(chip_w, n, inst_x, inst_y, timeout):
     
     opt = z3.Optimize()
-    opt.set("timeout", 10000)
+    opt.set("timeout", timeout*1000)
+    
+    chip_h = z3.Int('chip_h')
 
     max_h = sum(inst_y)
 
-    corners_w = chip_w
-    corners_h = max_h
-    # print(corners_w,corners_h)
-    # chip_s = chip_w * max_h * n
-    # corners_s = corners_w * corners_h * n
-
-    chip = []
-    corners = []
-
-    for i in range(chip_w):
-        col = []
-        for j in range(max_h):
-            col.append(z3.BoolVector('chip_'+str(i)+'_'+str(j), n))
-        chip.append(col)
-
-    for i in range(corners_w):
-        col = []
-        for j in range(corners_h):
-            col.append(z3.BoolVector('corners_'+str(i)+'_'+str(j), n))
-        corners.append(col)
-
+    chip = np.empty((chip_w,max_h,n),dtype=z3.BoolRef)
+    corners = np.empty((chip_w,max_h,n),dtype=z3.BoolRef)
 
     for i in range(chip_w):
         for j in range(max_h):
-            opt.add(z3.Sum([z3.If(chip[i][j][k],1,0) for k in range(n)])<=1)
-
-    for i in range(corners_w):
-        for j in range(corners_h):
-            opt.add(z3.Sum([z3.If(corners[i][j][k],1,0) for k in range(n)])<=1)
-
-    for k in range(n):
-        opt.add([z3.Or(z3.Not(corners[i][j][k]),chip[i][j][k]) for j in range(corners_h) for i in range(corners_w)])
-        opt.add([z3.Or(z3.Not(corners[i][j][k]),
-            z3.And(
-                z3.And([chip[ii][jj][k] for jj in range(j,j+inst_y[k]) for ii in range(i,i+inst_x[k])]),
-                z3.And([z3.Not(chip[ii][jj][k]) for jj in range(0,j) for ii in range(0,chip_w)]),
-                z3.And([z3.Not(chip[ii][jj][k]) for jj in range(0,max_h) for ii in range(0,i)]),
-                z3.And([z3.Not(chip[ii][jj][k]) for jj in range(j+inst_y[k],max_h) for ii in range(0,chip_w)]),
-                z3.And([z3.Not(chip[ii][jj][k]) for jj in range(0,max_h) for ii in range(i+inst_x[k],chip_w)])
-            )
-        ) for j in range(max_h-inst_y[k]+1) for i in range(chip_w-inst_x[k]+1)])
-        opt.add([z3.Or(z3.Not(corners[i][j][k]),z3.And(i<=chip_w-inst_x[k],j<=max_h-inst_y[k])) for j in range(corners_h) for i in range(corners_w)])
-        opt.add(z3.Sum([z3.If(corners[i][j][k],1,0) for j in range(corners_h) for i in range(corners_w)])==1)
-
-    
-    chip_h = z3.Int('chip_h')
-    for k in range(n):
-        for i in range(corners_w):
-            for j in range(corners_h): 
+            temp_chip = []
+            temp_corners = []
+            for k in range(n):
+                chip[i][j][k] = z3.Bool('chip_'+str(i)+'_'+str(j)+'_'+str(k))
+                corners[i][j][k] = z3.Bool('corners_'+str(i)+'_'+str(j)+'_'+str(k))
+                opt.add(z3.Or(z3.Not(corners[i][j][k]),chip[i][j][k]))
+                opt.add(z3.Or(z3.Not(corners[i][j][k]),z3.And(i<=chip_w-inst_x[k],j<=max_h-inst_y[k])))
                 opt.add(z3.Or(z3.Not(corners[i][j][k]),chip_h>=j + inst_y[k]))
+                temp_chip.append(chip[i][j][k])
+                temp_corners.append(corners[i][j][k])
+            opt.add(at_most_one(temp_chip))
+            opt.add(at_most_one(temp_corners))
 
+    for k in range(n):
+        temp_corners = []
+        for i in range(chip_w-inst_x[k]+1):
+            for j in range(max_h-inst_y[k]+1):
+                temp = []
+                for ii in range(chip_w):
+                    for jj in range(max_h):
+                        if (ii in range(i,i+inst_x[k]) and jj in range(j,j+inst_y[k])):
+                            temp.append(chip[ii][jj][k])
+                        else:
+                            temp.append(z3.Not(chip[ii][jj][k]))
+                opt.add(z3.Or(z3.Not(corners[i][j][k]),z3.And(temp)))
+                temp_corners.append(corners[i][j][k])
+        opt.add(at_least_one(temp_corners))
+        opt.add(at_most_one(temp_corners))
+ 
     opt.minimize(chip_h)
-    
     
     start = time.time()
     opt.check()

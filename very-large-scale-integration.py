@@ -7,12 +7,18 @@ from matplotlib.patches import Rectangle
 from src.smt import *
 from src.sat import *
 
-MIN = 1
-MAX = 20
+TIMEOUT_CP = 10
+TIMEOUT_SAT = 60
+TIMEOUT_SMT = 60
 
-CP = True
-SAT = True
-SMT = True
+MIN_CP = 0
+MAX_CP = 0
+
+MIN_SAT = 1
+MAX_SAT = 3
+
+MIN_SMT = 0
+MAX_SMT = 0
 
 def plot(file, width, height, blocks):
     _, ax = plt.subplots()
@@ -42,6 +48,10 @@ times_sat = []
 times_smt = []
 model = Model("src/cp.mzn")
 solver = Solver.lookup("chuffed")
+
+MIN = max(min(MIN_CP, MIN_SAT, MIN_SMT),1)
+MAX = max(MAX_CP, MAX_SAT, MAX_SMT)
+
 for i in range(MIN,MAX+1):
     file = str(i)
     with open('ins/ins-'+file+'.txt', 'r') as infile:
@@ -56,14 +66,14 @@ for i in range(MIN,MAX+1):
             inst_y.append(int(line_split[1]))
             line = infile.readline()
 
-    if CP == True:
+    if i in range(MIN_CP, MAX_CP+1):
         instance = Instance(solver, model)
         instance['chip_w'] = chip_w
         instance['n'] = n
         instance['inst_x'] = inst_x
         instance['inst_y'] = inst_y
 
-        result = instance.solve(timeout=datetime.timedelta(seconds=60),optimisation_level=5,free_search=True)
+        result = instance.solve(timeout=datetime.timedelta(seconds=TIMEOUT_CP),optimisation_level=5,free_search=True)
 
         try:
             chip_h_cp = result['objective']
@@ -90,9 +100,11 @@ for i in range(MIN,MAX+1):
             time_cp = 0
             times_cp.append(time_cp)
             print("FAIL CP "+str(i))
+    else:
+        times_cp.append(0)
 
-    if SAT == True:
-        chip_h_sat, bl_x_sat, bl_y_sat, time_sat = sat(chip_w, n, inst_x, inst_y)
+    if i in range(MIN_SAT, MAX_SAT+1):
+        chip_h_sat, bl_x_sat, bl_y_sat, time_sat = sat(chip_w, n, inst_x, inst_y, TIMEOUT_SAT)
         if chip_h_sat == chip_w:
             times_sat.append(time_sat)
             output_sat = str(chip_w) + " " + str(chip_h_sat) + "\n" + str(n) + "\n"
@@ -108,9 +120,11 @@ for i in range(MIN,MAX+1):
             time_sat = 0
             times_sat.append(time_sat)
             print("FAIL SAT "+str(i))
+    else:
+        times_sat.append(0)
 
-    if SMT == True:
-        chip_h_smt, bl_x_smt, bl_y_smt, time_smt = smt(chip_w, n, inst_x, inst_y)
+    if i in range(MIN_SMT, MAX_SMT+1):
+        chip_h_smt, bl_x_smt, bl_y_smt, time_smt = smt(chip_w, n, inst_x, inst_y, TIMEOUT_SMT)
         if chip_h_smt == chip_w:
             times_smt.append(time_smt)
             output_smt = str(chip_w) + " " + str(chip_h_smt) + "\n" + str(n) + "\n"
@@ -126,15 +140,14 @@ for i in range(MIN,MAX+1):
             time_smt = 0
             times_smt.append(time_smt)
             print("FAIL SMT "+str(i))
+    else:
+        times_smt.append(0)
 
 
 _, ax = plt.subplots(1,1,figsize=(10,10))
-if CP == True:
-    ax.bar(np.arange(MIN,MAX+1)-0.3,times_cp,0.3,label='cp')
-if SAT == True:
-    ax.bar(np.arange(MIN,MAX+1),times_sat,0.3,label='sat')
-if SMT == True:
-    ax.bar(np.arange(MIN,MAX+1)+0.3,times_smt,0.3,label='smt')
+ax.bar(np.arange(MIN,MAX+1)-0.3,times_cp,0.3,label='cp')
+ax.bar(np.arange(MIN,MAX+1),times_sat,0.3,label='sat')
+ax.bar(np.arange(MIN,MAX+1)+0.3,times_smt,0.3,label='smt')
 ax.set_xticks(range(MIN,MAX+1))
 ax.set_xlabel('instance')
 ax.set_ylabel('seconds')
