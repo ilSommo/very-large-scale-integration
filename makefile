@@ -20,7 +20,9 @@ bump:
 	sed -i '' 's/__version__ = .*/__version__ = '\'$(VERSION)\''/' *.py
 	sed -i '' 's/__version__ = .*/__version__ = '\'$(VERSION)\''/' **/*.py
 	autopep8 -i -a -a **.*py
-	#pdoc -o ./docs --docformat numpy very-large-scale-integration
+	sed -i '' 's/from minizinc import Instance, Status/# from minizinc import Instance, Status/' vlsi/utilities/wrappers.py
+	pdoc -o ./docs --docformat numpy vlsi
+	sed -i '' 's/# from minizinc import Instance, Status/from minizinc import Instance, Status/' vlsi/utilities/wrappers.py
 	pipenv lock
 	git add .
 	git commit -m "Bump version number to $(VERSION)"

@@ -10,7 +10,6 @@ The aim of this project is to model and solve a combinatorial decision problem w
 
 ```console
 $ make setup
-$ python very-large-scale-interaction.py
 ```
 
 ### To develop
@@ -18,3 +17,13 @@ $ python very-large-scale-interaction.py
 ```console
 $ make dev
 ```
+
+## Run
+
+```console
+$ python very-large-scale-interaction.py
+```
+
+## Documentation
+
+To browse documentation, open `docs/index.html` with a web browser.
