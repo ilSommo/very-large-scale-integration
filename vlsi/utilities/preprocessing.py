@@ -61,7 +61,7 @@ def preprocessing(file):
 
     Parameters
     ----------
-    file : string
+    file : str
         File name.
 
     Returns
