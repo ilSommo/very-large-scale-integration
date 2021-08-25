@@ -1,4 +1,4 @@
-__version__ = '1.0.0-beta.1'
+__version__ = '1.0.0-rc'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
 
@@ -55,12 +55,12 @@ times_smt_rotation = []
 solver = Solver.lookup("chuffed")
 
 # Enter if normal configuration is enabled
-if NORMAL == True:
+if NORMAL:
     # Minizinc normal model
     model_normal = Model("src/cp/cp_normal.mzn")
 
 # Enter if rotation configuration is enabled
-if ROTATION == True:
+if ROTATION:
     # Minizinc rotation model
     model_rotation = Model("src/cp/cp_rotation.mzn")
 
@@ -71,51 +71,69 @@ for i in range(min_ins, max_ins + 1):
     # Data dictionary
     data = preprocessing(file)
 
-    if i in range(MIN_CP, MAX_CP + 1) and NORMAL == True:
+    if i in range(MIN_CP, MAX_CP + 1) and NORMAL:
         # Solve normal CP
-        time = cp_wrapper(file,data, solver, model_normal, TIMEOUT_CP, rotation=False)
+        time = cp_wrapper(
+            file,
+            data,
+            solver,
+            model_normal,
+            TIMEOUT_CP,
+            rotation=False)
         times_cp_normal.append(time)
     else:
         times_cp_normal.append(0)
 
-    if i in range(MIN_CP, MAX_CP + 1) and ROTATION == True:
+    if i in range(MIN_CP, MAX_CP + 1) and ROTATION:
         # Solve rotation CP
-        time = cp_wrapper(file,data, solver, model_rotation, TIMEOUT_CP, rotation=True)
+        time = cp_wrapper(
+            file,
+            data,
+            solver,
+            model_rotation,
+            TIMEOUT_CP,
+            rotation=True)
         times_cp_rotation.append(time)
     else:
         times_cp_rotation.append(0)
 
-    if i in range(MIN_SAT, MAX_SAT + 1) and NORMAL == True:
+    if i in range(MIN_SAT, MAX_SAT + 1) and NORMAL:
         # Solve normal SAT
-        time = sat_wrapper(file,data, TIMEOUT_SAT, rotation=False)
-        times_sat_normal.append(time)  
+        time = sat_wrapper(file, data, TIMEOUT_SAT, rotation=False)
+        times_sat_normal.append(time)
     else:
         times_sat_normal.append(0)
-    
-    if i in range(MIN_SAT, MAX_SAT + 1) and ROTATION == True:
+
+    if i in range(MIN_SAT, MAX_SAT + 1) and ROTATION:
         # Solve rotation CP
-        time = sat_wrapper(file,data, TIMEOUT_SAT, rotation=True)
-        times_sat_rotation.append(time)  
+        time = sat_wrapper(file, data, TIMEOUT_SAT, rotation=True)
+        times_sat_rotation.append(time)
     else:
         times_sat_rotation.append(0)
 
-    if i in range(MIN_SMT, MAX_SMT + 1) and NORMAL == True:
+    if i in range(MIN_SMT, MAX_SMT + 1) and NORMAL:
         # Solve normal SMT
-        time = smt_wrapper(file,data, TIMEOUT_SMT, rotation=False)
-        times_smt_normal.append(time)  
+        time = smt_wrapper(file, data, TIMEOUT_SMT, rotation=False)
+        times_smt_normal.append(time)
     else:
         times_smt_normal.append(0)
-    
-    if i in range(MIN_SMT, MAX_SMT + 1) and ROTATION == True:
+
+    if i in range(MIN_SMT, MAX_SMT + 1) and ROTATION:
         # Solve rotation SMT
-        time = smt_wrapper(file,data, TIMEOUT_SMT, rotation=True)
-        times_smt_rotation.append(time)  
+        time = smt_wrapper(file, data, TIMEOUT_SMT, rotation=True)
+        times_smt_rotation.append(time)
     else:
         times_smt_rotation.append(0)
 
 # Time limit
 top = max(TIMEOUT_CP, TIMEOUT_SAT, TIMEOUT_SMT)
 # Computation times
-times = [times_cp_normal,times_cp_rotation, times_sat_normal,times_sat_rotation, times_smt_normal, times_smt_rotation]
+times = [
+    times_cp_normal,
+    times_cp_rotation,
+    times_sat_normal,
+    times_sat_rotation,
+    times_smt_normal,
+    times_smt_rotation]
 # Plot computation times
 plot_times(times, min_ins, max_ins, top, NORMAL, ROTATION)
