@@ -49,7 +49,7 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
 
     Parameters
     ----------
-    file : string
+    file : str
         File name.
     data : dict
         Data dictionary.
@@ -115,7 +115,7 @@ def sat_wrapper(file,data, timeout, rotation):
 
     Parameters
     ----------
-    file : string
+    file : str
         File name.
     data : dict
         Data dictionary.
@@ -160,7 +160,7 @@ def smt_wrapper(file,data, timeout, rotation):
 
     Parameters
     ----------
-    file : string
+    file : str
         File name.
     data : dict
         Data dictionary.
