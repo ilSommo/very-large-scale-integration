@@ -1,6 +1,9 @@
 __version__ = '1.0.0-beta.1'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
+
+import numpy as np
+
 def preprocessing(file):
     with open("ins/ins-" + file + ".txt", 'r') as infile:
         chip_w = int(infile.readline().strip())
@@ -13,7 +16,9 @@ def preprocessing(file):
             inst_x.append(int(line_split[0]))
             inst_y.append(int(line_split[1]))
             line = infile.readline()
-    
+
+    min_index = int(np.argmin([inst_x[k]*inst_y[k] for k in range(n)]))
+
     total_area = sum([inst_x[k]*inst_y[k] for k in range(n)])
 
     min_h = total_area // chip_w
@@ -43,4 +48,5 @@ def preprocessing(file):
     data['inst_y'] = inst_y
     data['min_h'] = min_h
     data['max_h'] = max_h
+    data['min_index'] = min_index
     return(data)

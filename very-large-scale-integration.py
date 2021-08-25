@@ -12,29 +12,29 @@ from vlsi.solvers.smt import *
 
 
 NORMAL = True
-ROTATION = False
+ROTATION = True
 
-TIMEOUT_CP = 90
+TIMEOUT_CP = 60
 TIMEOUT_SAT = 0
 TIMEOUT_SMT = 0
 
 MIN_CP = 1
-MAX_CP = 40
+MAX_CP = 30
 
 MIN_SAT = 1
 MAX_SAT = 10
 
-MIN_SMT = 32
-MAX_SMT = 32
+MIN_SMT = 1
+MAX_SMT = 20
 
 if TIMEOUT_CP == 0:
-    MIN_CP = 40
+    MIN_CP = 41
     MAX_CP = 0
 if TIMEOUT_SAT == 0:
-    MIN_SAT = 40
+    MIN_SAT = 41
     MAX_SAT = 0
 if TIMEOUT_SMT == 0:
-    MIN_SMT = 40
+    MIN_SMT = 41
     MAX_SMT = 0
 
 min_ins = min(MIN_CP, MIN_SAT, MIN_SMT)
@@ -78,7 +78,7 @@ for i in range(min_ins, max_ins + 1):
     else:
         times_sat_normal.append(0)
     
-    if i in range(MIN_SAT, MAX_SAT + 1) and ROTATION == True and False:
+    if i in range(MIN_SAT, MAX_SAT + 1) and ROTATION == True:
         time = sat_wrapper(file,data, TIMEOUT_SAT, rotation=True)
         times_sat_rotation.append(time)  
     else:

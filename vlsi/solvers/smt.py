@@ -6,11 +6,19 @@ import time
 
 import z3
 
-def smt(chip_w, n, inst_x, inst_y, min_h, max_h, timeout, rotation):
+def smt(data, timeout, rotation):
+
+    chip_w = data['chip_w']
+    n = data['n']
+    inst_x =  data['inst_x']
+    inst_y = data['inst_y']
+    min_h = data['min_h']
+    max_h = data['max_h']
+    min_index = data['min_index']
+
     opt = z3.Optimize()
     opt.set('timeout', timeout*1000)
     chip_h = z3.Int("chip_h")
-
 
     bl_x = z3.IntVector("bl_x", n)
     bl_y = z3.IntVector("bl_y", n)
@@ -26,19 +34,19 @@ def smt(chip_w, n, inst_x, inst_y, min_h, max_h, timeout, rotation):
 
     for k in range(n):
         opt.add(bl_x[k] >=0)
-        opt.add(bl_x[k] <= chip_w)
-        opt.add(bl_y[k] >=0)
-        opt.add(bl_y[k] <= max_h)
         opt.add(bl_x[k]+new_inst_x[k] <= chip_w)
-        opt.add(chip_h>=bl_y[k] + new_inst_y[k])
+        opt.add(bl_y[k] >=0)
+        opt.add(bl_y[k] + new_inst_y[k]<=chip_h)
         for l in range(n):
             if k != l:
                 opt.add(z3.Or((bl_x[l]+new_inst_x[l] <= bl_x[k]),(bl_x[l] >= bl_x[k]+new_inst_x[k]),(bl_y[l]+new_inst_y[l] <= bl_y[k]),(bl_y[l] >= bl_y[k]+new_inst_y[k])))
 
-
     opt.add(chip_h <= max_h)
     opt.add(chip_h >= min_h)
     
+    # symmetry breaking
+    opt.add(z3.And(((2*bl_x[min_index]+new_inst_x[min_index])<=chip_w),((2*bl_y[min_index]+new_inst_y[min_index])<=chip_h)))
+
     opt.minimize(chip_h)
     start = time.time() 
     check = opt.check()

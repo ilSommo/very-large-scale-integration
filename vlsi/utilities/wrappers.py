@@ -27,6 +27,8 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
     inst_y = instance['inst_y'] = data['inst_y']
     instance['min_h'] = data['min_h']
     instance['max_h'] = data['max_h']
+    instance['min_index'] = data['min_index']+1
+    min_index=data['min_index']
 
     result = instance.solve(timeout=datetime.timedelta(seconds=timeout),optimisation_level=5,free_search=True)
     if result.status is Status.OPTIMAL_SOLUTION:
@@ -38,7 +40,7 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
             inst_y = result['new_inst_y']
         time = result.statistics['time'].total_seconds()
         output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y)
-        plot_chip(file, chip_w,chip_h,tuple(zip(inst_x,inst_y,bl_x,bl_y)))
+        plot_chip(file, chip_w,chip_h,tuple(zip(inst_x,inst_y,bl_x,bl_y)),min_index)
         print("DONE " + str(file) + ": " + str(time) + " s")
     else:
         time = 0
@@ -50,16 +52,14 @@ def sat_wrapper(file,data, timeout, rotation):
     file = file + "-sat" if rotation == False else file + "-sat-rot"
     chip_w = data['chip_w']
     n = data['n']
-    inst_x =  data['inst_x']
+    inst_x = data['inst_x']
     inst_y = data['inst_y']
-    min_h = data['min_h']
-    max_h = data['max_h']
-
-    chip_h, bl_x, bl_y, time = sat(chip_w, n, inst_x, inst_y, min_h, max_h, timeout, rotation)
+    min_index = data['min_index']
+    chip_h, bl_x, bl_y,inst_x, inst_y, time = sat(data, timeout, rotation)
     
     if chip_h:
         output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y)
-        plot_chip(file, chip_w,chip_h,tuple(zip(inst_x,inst_y,bl_x,bl_y)))
+        plot_chip(file, chip_w,chip_h,tuple(zip(inst_x,inst_y,bl_x,bl_y)),min_index)
         print("DONE " + str(file) + ": " + str(time) + " s")
     else:
         time = 0
@@ -71,16 +71,13 @@ def smt_wrapper(file,data, timeout, rotation):
     file = file + "-smt" if rotation == False else file + "-smt-rot"
     chip_w = data['chip_w']
     n = data['n']
-    inst_x =  data['inst_x']
-    inst_y = data['inst_y']
-    min_h = data['min_h']
-    max_h = data['max_h']
+    min_index = data['min_index']
 
-    chip_h, bl_x, bl_y, inst_x, inst_y, time = smt(chip_w, n, inst_x, inst_y, min_h, max_h, timeout, rotation)
+    chip_h, bl_x, bl_y, inst_x, inst_y, time = smt(data, timeout, rotation)
     
     if chip_h:
         output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y)
-        plot_chip(file, chip_w,chip_h,tuple(zip(inst_x,inst_y,bl_x,bl_y)))
+        plot_chip(file, chip_w,chip_h,tuple(zip(inst_x,inst_y,bl_x,bl_y)),min_index)
         print("DONE " + str(file) + ": " + str(time) + " s")
     else:
         time = 0

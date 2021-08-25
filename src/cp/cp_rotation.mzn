@@ -8,6 +8,7 @@ array[RANGE] of int: inst_x; % Horizontal dimension of the i-th piece
 array[RANGE] of int: inst_y; % Vertical dimension of the i-th piece
 int: min_h;
 int: max_h;
+int: min_index;
 % int: max_h = sum(i in RANGE)(inst_y[i]); % Maximum height of the chip
 int: min_size = min(inst_x ++ inst_y);
 
@@ -23,9 +24,8 @@ new_inst_x = [if rotated[i] then inst_y[i] else inst_x[i] endif | i in RANGE];
 array[RANGE] of var int: new_inst_y;
 new_inst_y = [if rotated[i] then inst_x[i] else inst_y[i] endif | i in RANGE];
 
-int: min_index = arg_min([inst_x[i]*inst_y[i] | i in RANGE]);
 constraint symmetry_breaking_constraint(
-    (bl_x[min_index] + (new_inst_x[min_index] div 2) <= chip_w div 2) /\ (bl_y[min_index] + (new_inst_y[min_index] div 2) <= chip_h div 2)
+    ((2*bl_x[min_index] + new_inst_x[min_index]) <= chip_w) /\ ((2*bl_y[min_index] + new_inst_y[min_index]) <= chip_h)
 );
 
 % Dual problem: each cell in the 2D grid contains the number of the piece it belongs

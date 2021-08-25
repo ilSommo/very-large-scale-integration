@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_chip(file, width, height, blocks):
+def plot_chip(file, width, height, blocks, min_index):
     _, ax = plt.subplots()
     index = 1
     n = len(list(blocks))
@@ -17,13 +17,17 @@ def plot_chip(file, width, height, blocks):
         ax.add_patch(Rectangle((x, y), w, h, facecolor=c))
         ax.add_patch(Rectangle((x, y), w, h, fill=None, ls='-', lw=2))
         index += 1
+    plt.plot(blocks[min_index][2]+0.5*blocks[min_index][0], blocks[min_index][3]+0.5*blocks[min_index][1],'o',color='white',zorder=3)
+    # ax.add_patch(Rectangle((0, 0), width/2, height/2, fill=None, ls='--', lw=2,color='white',zorder=3))
     ax.set_xlim(0, width)
     ax.set_ylim(0, height)
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     ax.set_xticks(range(width + 1))
     ax.set_yticks(range(height + 1))
-    ax.grid(color='black')
+    ax.grid(color='black',zorder=0)
+    ax.plot([0,width/2], [height/2, height/2],ls='--', lw=2,color='white',zorder=3)
+    ax.plot([width/2,width/2], [0, height/2],ls='--', lw=2,color='white',zorder=3)
     plt.title(str(file))
     plt.savefig("out/out-" + file + ".png")
     plt.close()

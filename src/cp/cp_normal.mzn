@@ -8,6 +8,7 @@ array[RANGE] of int: inst_x; % Horizontal dimension of the i-th piece
 array[RANGE] of int: inst_y; % Vertical dimension of the i-th piece
 int: min_h;
 int: max_h;
+int: min_index;
 % int: max_h = sum(i in RANGE)(inst_y[i]); % Maximum height of the chip
 
 % chip_h as objective function
@@ -19,9 +20,9 @@ array[RANGE] of var 0..(max_h - min(inst_y)): bl_y;
 % Dual problem: each cell in the 2D grid contains the number of the piece it belongs
 % array[1..chip_w, 1..max_h] of var 0..n: B;
 
-int: min_index = arg_min([inst_x[i]*inst_y[i] | i in RANGE]);
+
 constraint symmetry_breaking_constraint(
-    (bl_x[min_index] + (inst_x[min_index] div 2) <= chip_w div 2) /\ (bl_y[min_index] + (inst_y[min_index] div 2) <= chip_h div 2)
+    ((2*bl_x[min_index] + inst_x[min_index]) <= chip_w) /\ ((2*bl_y[min_index] + inst_y[min_index]) <= chip_h)
 );
 
 
