@@ -1,4 +1,4 @@
-__version__ = '1.0.0-beta.1'
+__version__ = '1.0.0-rc.4'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
 
@@ -55,7 +55,6 @@ def compute_max_h(chip_w, inst_x, inst_y):
     return max_h
 
 
-
 def preprocessing(file):
     """Preprocesses the file.
 
@@ -86,16 +85,16 @@ def preprocessing(file):
             inst_y.append(int(line_split[1]))
             line = infile.readline()
     # Index of smallest block
-    min_index = int(np.argmin([inst_x[k]*inst_y[k] for k in range(n)]))
+    min_index = int(np.argmin([inst_x[k] * inst_y[k] for k in range(n)]))
 
     # Minimum height of chip
-    min_h = sum([inst_x[k]*inst_y[k] for k in range(n)]) // chip_w
-    
+    min_h = sum([inst_x[k] * inst_y[k] for k in range(n)]) // chip_w
+
     # Maximum height of chip
     max_h = compute_max_h(chip_w, inst_x, inst_y)
-    
+
     # Data dictionary
-    data={}
+    data = {}
     data['chip_w'] = chip_w
     data['n'] = n
     data['inst_x'] = inst_x
