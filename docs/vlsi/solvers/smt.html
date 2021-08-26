@@ -52,7 +52,7 @@
                 
                         <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;1.0.0-beta.1&#39;</span>
+            <div class="codehilite"><pre><span></span><span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;1.0.0-rc.4&#39;</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Giacomo Berselli, Martino Pulici&#39;</span>
 
 
@@ -91,7 +91,7 @@
     <span class="c1"># Instance parameters</span>
     <span class="n">chip_w</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;chip_w&#39;</span><span class="p">]</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span>
-    <span class="n">inst_x</span> <span class="o">=</span>  <span class="n">data</span><span class="p">[</span><span class="s1">&#39;inst_x&#39;</span><span class="p">]</span>
+    <span class="n">inst_x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;inst_x&#39;</span><span class="p">]</span>
     <span class="n">inst_y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;inst_y&#39;</span><span class="p">]</span>
     <span class="n">min_h</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;min_h&#39;</span><span class="p">]</span>
     <span class="n">max_h</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;max_h&#39;</span><span class="p">]</span>
@@ -99,21 +99,23 @@
 
     <span class="c1"># z3 optimizer</span>
     <span class="n">opt</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">Optimize</span><span class="p">()</span>
-    <span class="n">opt</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
     <span class="c1"># Chip height</span>
     <span class="n">chip_h</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span><span class="s2">&quot;chip_h&quot;</span><span class="p">)</span>
 
     <span class="c1"># Blocks&#39; positions</span>
     <span class="n">bl_x</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">IntVector</span><span class="p">(</span><span class="s2">&quot;bl_x&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
     <span class="n">bl_y</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">IntVector</span><span class="p">(</span><span class="s2">&quot;bl_y&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-    
+
     <span class="c1"># Enter if rotation is enabled</span>
-    <span class="k">if</span> <span class="n">rotation</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">rotation</span><span class="p">:</span>
         <span class="c1"># Boolean vector to flag rotated blocks</span>
         <span class="n">rotated</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">BoolVector</span><span class="p">(</span><span class="s2">&quot;rotated&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
         <span class="c1"># Actual blocks&#39; widths and heights</span>
-        <span class="n">new_inst_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">z3</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">rotated</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-        <span class="n">new_inst_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">z3</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">rotated</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="n">new_inst_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">z3</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">rotated</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                      <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="n">new_inst_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">z3</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">rotated</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                      <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Actual blocks&#39; widths and heights</span>
         <span class="n">new_inst_x</span> <span class="o">=</span> <span class="n">inst_x</span>
@@ -122,39 +124,47 @@
     <span class="c1"># Cycle blocks</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="c1"># Add constraints on blocks&#39; positions</span>
-        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">chip_w</span><span class="o">-</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span><span class="n">chip_h</span><span class="o">-</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">chip_w</span> <span class="o">-</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">chip_h</span> <span class="o">-</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
         <span class="c1"># Cycle blocks</span>
         <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
             <span class="c1"># Enter if indexes are different</span>
             <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">l</span><span class="p">:</span>
                 <span class="c1"># Add reciprocal positional constraints</span>
-                <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">z3</span><span class="o">.</span><span class="n">Or</span><span class="p">((</span><span class="n">bl_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]),(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">]),(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]),(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span>
+                <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                    <span class="n">z3</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span>
+                        <span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span>
+                        <span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span>
+                        <span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span>
 
     <span class="c1"># Add chip height constraints</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">chip_h</span> <span class="o">&lt;=</span> <span class="n">max_h</span><span class="p">)</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">chip_h</span> <span class="o">&gt;=</span> <span class="n">min_h</span><span class="p">)</span>
-    
+
     <span class="c1"># Add symmetry breaking constraints</span>
-    <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">z3</span><span class="o">.</span><span class="n">And</span><span class="p">(((</span><span class="mi">2</span><span class="o">*</span><span class="n">bl_x</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">min_index</span><span class="p">])</span><span class="o">&lt;=</span><span class="n">chip_w</span><span class="p">),((</span><span class="mi">2</span><span class="o">*</span><span class="n">bl_y</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">min_index</span><span class="p">])</span><span class="o">&lt;=</span><span class="n">chip_h</span><span class="p">)))</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+        <span class="n">z3</span><span class="o">.</span><span class="n">And</span><span class="p">(</span>
+            <span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">min_index</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">chip_w</span><span class="p">),</span>
+            <span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">min_index</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">chip_h</span><span class="p">)))</span>
 
     <span class="c1"># Minimize chip height</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">chip_h</span><span class="p">)</span>
     <span class="c1"># Start timer</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> 
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="c1"># Check SMT</span>
     <span class="n">check</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
     <span class="c1"># Stop timer</span>
     <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="c1"># Save model</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
     <span class="c1"># Result lists</span>
-    <span class="n">result_x</span><span class="o">=</span><span class="p">[]</span>
-    <span class="n">result_y</span><span class="o">=</span><span class="p">[]</span>
-    <span class="n">result_inst_x</span><span class="o">=</span><span class="p">[]</span>
-    <span class="n">result_inst_y</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">result_x</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result_y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result_inst_x</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result_inst_y</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># Enter if optimal solution is found</span>
     <span class="k">if</span> <span class="n">check</span> <span class="o">==</span> <span class="n">z3</span><span class="o">.</span><span class="n">sat</span><span class="p">:</span>
         <span class="c1"># Cycle chips</span>
@@ -162,8 +172,10 @@
             <span class="c1"># Append results</span>
             <span class="n">result_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]))))</span>
             <span class="n">result_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]))))</span>
-            <span class="n">result_inst_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span> <span class="k">if</span> <span class="n">rotation</span> <span class="o">==</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-            <span class="n">result_inst_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span> <span class="k">if</span> <span class="n">rotation</span> <span class="o">==</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">result_inst_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span> <span class="k">if</span> <span class="n">rotation</span> <span class="k">else</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">result_inst_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span> <span class="k">if</span> <span class="n">rotation</span> <span class="k">else</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
         <span class="c1"># Chip height</span>
         <span class="n">chip_h_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">chip_h</span><span class="p">)))</span>
     <span class="k">else</span><span class="p">:</span>
@@ -171,8 +183,8 @@
         <span class="n">chip_h_int</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Computation time</span>
-    <span class="n">computation_time</span> <span class="o">=</span> <span class="n">end</span><span class="o">-</span><span class="n">start</span>
-    <span class="k">return</span> <span class="n">chip_h_int</span><span class="p">,</span> <span class="n">result_x</span><span class="p">,</span> <span class="n">result_y</span><span class="p">,</span><span class="n">result_inst_x</span><span class="p">,</span> <span class="n">result_inst_y</span><span class="p">,</span> <span class="n">computation_time</span>
+    <span class="n">computation_time</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+    <span class="k">return</span> <span class="n">chip_h_int</span><span class="p">,</span> <span class="n">result_x</span><span class="p">,</span> <span class="n">result_y</span><span class="p">,</span> <span class="n">result_inst_x</span><span class="p">,</span> <span class="n">result_inst_y</span><span class="p">,</span> <span class="n">computation_time</span>
 </pre></div>
 
         </details>
@@ -218,7 +230,7 @@
     <span class="c1"># Instance parameters</span>
     <span class="n">chip_w</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;chip_w&#39;</span><span class="p">]</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span>
-    <span class="n">inst_x</span> <span class="o">=</span>  <span class="n">data</span><span class="p">[</span><span class="s1">&#39;inst_x&#39;</span><span class="p">]</span>
+    <span class="n">inst_x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;inst_x&#39;</span><span class="p">]</span>
     <span class="n">inst_y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;inst_y&#39;</span><span class="p">]</span>
     <span class="n">min_h</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;min_h&#39;</span><span class="p">]</span>
     <span class="n">max_h</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;max_h&#39;</span><span class="p">]</span>
@@ -226,21 +238,23 @@
 
     <span class="c1"># z3 optimizer</span>
     <span class="n">opt</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">Optimize</span><span class="p">()</span>
-    <span class="n">opt</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
     <span class="c1"># Chip height</span>
     <span class="n">chip_h</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span><span class="s2">&quot;chip_h&quot;</span><span class="p">)</span>
 
     <span class="c1"># Blocks&#39; positions</span>
     <span class="n">bl_x</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">IntVector</span><span class="p">(</span><span class="s2">&quot;bl_x&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
     <span class="n">bl_y</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">IntVector</span><span class="p">(</span><span class="s2">&quot;bl_y&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-    
+
     <span class="c1"># Enter if rotation is enabled</span>
-    <span class="k">if</span> <span class="n">rotation</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">rotation</span><span class="p">:</span>
         <span class="c1"># Boolean vector to flag rotated blocks</span>
         <span class="n">rotated</span> <span class="o">=</span> <span class="n">z3</span><span class="o">.</span><span class="n">BoolVector</span><span class="p">(</span><span class="s2">&quot;rotated&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
         <span class="c1"># Actual blocks&#39; widths and heights</span>
-        <span class="n">new_inst_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">z3</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">rotated</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-        <span class="n">new_inst_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">z3</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">rotated</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="n">new_inst_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">z3</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">rotated</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                      <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="n">new_inst_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">z3</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">rotated</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                      <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Actual blocks&#39; widths and heights</span>
         <span class="n">new_inst_x</span> <span class="o">=</span> <span class="n">inst_x</span>
@@ -249,39 +263,47 @@
     <span class="c1"># Cycle blocks</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="c1"># Add constraints on blocks&#39; positions</span>
-        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">chip_w</span><span class="o">-</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span><span class="n">chip_h</span><span class="o">-</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">chip_w</span> <span class="o">-</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">chip_h</span> <span class="o">-</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
         <span class="c1"># Cycle blocks</span>
         <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
             <span class="c1"># Enter if indexes are different</span>
             <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">l</span><span class="p">:</span>
                 <span class="c1"># Add reciprocal positional constraints</span>
-                <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">z3</span><span class="o">.</span><span class="n">Or</span><span class="p">((</span><span class="n">bl_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]),(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">]),(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]),(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span>
+                <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                    <span class="n">z3</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span>
+                        <span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span>
+                        <span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span>
+                        <span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span>
 
     <span class="c1"># Add chip height constraints</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">chip_h</span> <span class="o">&lt;=</span> <span class="n">max_h</span><span class="p">)</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">chip_h</span> <span class="o">&gt;=</span> <span class="n">min_h</span><span class="p">)</span>
-    
+
     <span class="c1"># Add symmetry breaking constraints</span>
-    <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">z3</span><span class="o">.</span><span class="n">And</span><span class="p">(((</span><span class="mi">2</span><span class="o">*</span><span class="n">bl_x</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">min_index</span><span class="p">])</span><span class="o">&lt;=</span><span class="n">chip_w</span><span class="p">),((</span><span class="mi">2</span><span class="o">*</span><span class="n">bl_y</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span><span class="o">+</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">min_index</span><span class="p">])</span><span class="o">&lt;=</span><span class="n">chip_h</span><span class="p">)))</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+        <span class="n">z3</span><span class="o">.</span><span class="n">And</span><span class="p">(</span>
+            <span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">bl_x</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">min_index</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">chip_w</span><span class="p">),</span>
+            <span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">bl_y</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">min_index</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">chip_h</span><span class="p">)))</span>
 
     <span class="c1"># Minimize chip height</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">chip_h</span><span class="p">)</span>
     <span class="c1"># Start timer</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> 
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="c1"># Check SMT</span>
     <span class="n">check</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
     <span class="c1"># Stop timer</span>
     <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="c1"># Save model</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
     <span class="c1"># Result lists</span>
-    <span class="n">result_x</span><span class="o">=</span><span class="p">[]</span>
-    <span class="n">result_y</span><span class="o">=</span><span class="p">[]</span>
-    <span class="n">result_inst_x</span><span class="o">=</span><span class="p">[]</span>
-    <span class="n">result_inst_y</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">result_x</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result_y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result_inst_x</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result_inst_y</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># Enter if optimal solution is found</span>
     <span class="k">if</span> <span class="n">check</span> <span class="o">==</span> <span class="n">z3</span><span class="o">.</span><span class="n">sat</span><span class="p">:</span>
         <span class="c1"># Cycle chips</span>
@@ -289,8 +311,10 @@
             <span class="c1"># Append results</span>
             <span class="n">result_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">bl_x</span><span class="p">[</span><span class="n">k</span><span class="p">]))))</span>
             <span class="n">result_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">bl_y</span><span class="p">[</span><span class="n">k</span><span class="p">]))))</span>
-            <span class="n">result_inst_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span> <span class="k">if</span> <span class="n">rotation</span> <span class="o">==</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-            <span class="n">result_inst_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span> <span class="k">if</span> <span class="n">rotation</span> <span class="o">==</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">result_inst_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span> <span class="k">if</span> <span class="n">rotation</span> <span class="k">else</span> <span class="n">new_inst_x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">result_inst_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span> <span class="k">if</span> <span class="n">rotation</span> <span class="k">else</span> <span class="n">new_inst_y</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
         <span class="c1"># Chip height</span>
         <span class="n">chip_h_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">chip_h</span><span class="p">)))</span>
     <span class="k">else</span><span class="p">:</span>
@@ -298,8 +322,8 @@
         <span class="n">chip_h_int</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Computation time</span>
-    <span class="n">computation_time</span> <span class="o">=</span> <span class="n">end</span><span class="o">-</span><span class="n">start</span>
-    <span class="k">return</span> <span class="n">chip_h_int</span><span class="p">,</span> <span class="n">result_x</span><span class="p">,</span> <span class="n">result_y</span><span class="p">,</span><span class="n">result_inst_x</span><span class="p">,</span> <span class="n">result_inst_y</span><span class="p">,</span> <span class="n">computation_time</span>
+    <span class="n">computation_time</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+    <span class="k">return</span> <span class="n">chip_h_int</span><span class="p">,</span> <span class="n">result_x</span><span class="p">,</span> <span class="n">result_y</span><span class="p">,</span> <span class="n">result_inst_x</span><span class="p">,</span> <span class="n">result_inst_y</span><span class="p">,</span> <span class="n">computation_time</span>
 </pre></div>
 
         </details>
