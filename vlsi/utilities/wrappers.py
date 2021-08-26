@@ -1,4 +1,4 @@
-__version__ = '1.0.0-beta.1'
+__version__ = '1.0.0-rc.4'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
 
@@ -38,11 +38,13 @@ def output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y):
     # Cycle for blocks
     for k in range(n):
         # Update output
-        output += str(inst_x[k]) + " " + str(inst_y[k]) + " " + str(bl_x[k]) + " " + str(bl_y[k]) + "\n"
+        output += str(inst_x[k]) + " " + str(inst_y[k]) + \
+            " " + str(bl_x[k]) + " " + str(bl_y[k]) + "\n"
     # Open output file
-    with open("out/out-"+file+".txt", 'w') as outfile:
+    with open("out/out-" + file + ".txt", 'w') as outfile:
         # Write output on output file
         outfile.write(output)
+
 
 def cp_wrapper(file, data, solver, model, timeout, rotation):
     """Calls the CP solver and returns the computation time.
@@ -78,11 +80,15 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
     inst_y = instance['inst_y'] = data['inst_y']
     instance['min_h'] = data['min_h']
     instance['max_h'] = data['max_h']
-    instance['min_index'] = data['min_index']+1
-    min_index=data['min_index']
+    instance['min_index'] = data['min_index'] + 1
+    min_index = data['min_index']
 
     # Minizinc result
-    result = instance.solve(timeout=datetime.timedelta(seconds=timeout),optimisation_level=5,free_search=True)
+    result = instance.solve(
+        timeout=datetime.timedelta(
+            seconds=timeout),
+        optimisation_level=5,
+        free_search=True)
     # Enter if optimal solution is found
     if result.status is Status.OPTIMAL_SOLUTION:
         # Chip height
@@ -100,7 +106,8 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
         # Write output
         output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y)
         # Save plot
-        plot_chip(file, chip_w,chip_h,tuple(zip(inst_x,inst_y,bl_x,bl_y)),min_index)
+        plot_chip(file, chip_w, chip_h, tuple(
+            zip(inst_x, inst_y, bl_x, bl_y)), min_index)
         # Print completion status
         print("DONE " + str(file) + ": " + str(time) + " s")
     else:
@@ -110,7 +117,8 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
         print("FAIL " + str(file))
     return time
 
-def sat_wrapper(file,data, timeout, rotation):
+
+def sat_wrapper(file, data, timeout, rotation):
     """Calls the SAT solver and returns the computation time.
 
     Parameters
@@ -138,13 +146,14 @@ def sat_wrapper(file,data, timeout, rotation):
     inst_y = data['inst_y']
     min_index = data['min_index']
     # Call SAT solver
-    chip_h, bl_x, bl_y,inst_x, inst_y, time = sat(data, timeout, rotation)
+    chip_h, bl_x, bl_y, inst_x, inst_y, time = sat(data, timeout, rotation)
     # Enter if a result is found
     if chip_h:
         # Write output
         output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y)
         # Save plot
-        plot_chip(file, chip_w,chip_h,tuple(zip(inst_x,inst_y,bl_x,bl_y)),min_index)
+        plot_chip(file, chip_w, chip_h, tuple(
+            zip(inst_x, inst_y, bl_x, bl_y)), min_index)
         # Print completion status
         print("DONE " + str(file) + ": " + str(time) + " s")
     else:
@@ -155,7 +164,8 @@ def sat_wrapper(file,data, timeout, rotation):
 
     return time
 
-def smt_wrapper(file,data, timeout, rotation):
+
+def smt_wrapper(file, data, timeout, rotation):
     """Calls the SMT solver and returns the computation time.
 
     Parameters
@@ -187,7 +197,8 @@ def smt_wrapper(file,data, timeout, rotation):
         # Write output
         output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y)
         # Save plot
-        plot_chip(file, chip_w,chip_h,tuple(zip(inst_x,inst_y,bl_x,bl_y)),min_index)
+        plot_chip(file, chip_w, chip_h, tuple(
+            zip(inst_x, inst_y, bl_x, bl_y)), min_index)
         # Print completion status
         print("DONE " + str(file) + ": " + str(time) + " s")
     else:
