@@ -1,4 +1,4 @@
-__version__ = '1.0.0-rc.1'
+__version__ = '1.0.0-rc.2'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
 
@@ -19,13 +19,13 @@ TIMEOUT_SAT = 300
 TIMEOUT_SMT = 300
 
 MIN_CP = 1
-MAX_CP = 10
+MAX_CP = 40
 
 MIN_SAT = 1
 MAX_SAT = 10
 
 MIN_SMT = 1
-MAX_SMT = 10
+MAX_SMT = 40
 
 if TIMEOUT_CP == 0:
     MIN_CP = 41
