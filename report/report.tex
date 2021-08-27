@@ -7,7 +7,6 @@
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{setspace}
-%\usepackage{listings}
 
 \onehalfspacing
 
@@ -56,9 +55,9 @@ In addition, 3 auxiliary variables are created:
 \end{itemize}
 The results of the various solving procedures consists in 3 variables:
 \begin{itemize}
-	\item \verb+chip_h+: the height of the chip;
 	\item \verb+bl_x+: a list containing the ordered horizontal positions of the bottom left corners of the circuits;
-	\item \verb+bl_y+: a list containing the ordered vertical positions of the bottom left corners of the circuits.
+	\item \verb+bl_y+: a list containing the ordered vertical positions of the bottom left corners of the circuits;
+	\item \verb+chip_h+: the height of the chip.
 \end{itemize}
 
 
@@ -108,7 +107,7 @@ In each of the configurations, the center of the smallest circuit (which has the
 \subsection{Rotation}
 
 
-The next step is to implement circuit rotations. Since the circuits are rectangular and nothing is known \emph{a priori} about whether they would wedge perfectly without gaps keeping them in their base orientation, it may be possible that the minimal height of the chip is obtained by rotating some of the circuits. For example, the difference between the two solutions for Instance 10 is shown in Fig. \ref{fig:rotations}. Even if, at least for the given instance, rotating does not actually reduce the chip height, it can still be observed that some circuits get rotated by the solver.
+The next step is to implement circuit rotations. Since the circuits are rectangular and nothing is known \emph{a priori} about whether they would wedge perfectly without gaps keeping them in their base orientation, it may be possible that the minimal height of the chip is obtained by rotating some of the circuits. For example, the difference between the 2 solutions for Instance 10 is shown in Fig. \ref{fig:rotations}. Even if, at least for the given instance, rotating does not actually reduce the chip height, it can still be observed that some circuits get rotated by the solver.
 
 \begin{figure}
     \centering
@@ -214,7 +213,7 @@ constraint cumulative(bl_x, inst_x, inst_y, max_h);
  
 The MiniZinc reference manual explains how the cumulative constraint ``requires that a set of tasks given by start times s, durations d, and resource requirements r, never require more than a global resource bound b at any one time''. So, the first constraint requires that at any position along the horizontal axis, the required shared resource (i.e. the width of each circuit \verb|inst_x| in such position) of a circuit whose vertical coordinate is \verb|bl_y| and whose height is \verb|inst_y| never exceeds the width of the chip, \verb|chip_w|. The second constraint instead requires that at any position along the vertical axis, the required shared resource (i.e. the height of each circuit \verb|inst_y| in such position) of a circuit whose horizontal coordinate is \verb|bl_x| and whose width is \verb|inst_x| never exceeds the maximum height of the chip, \verb|max_h|.
 
-\subsubsection{Symmetry breaking}
+\subsubsection{Symmetry breaking}\label{sec:cp-symmetry}
 
 Finally, a symmetry breaking constraint was added. Its purpose is to avoid generating solutions that are symmetrical to each other, especially to prune branches of the solution tree that lead to non-acceptable states. As explained in Section \ref{sec:symmetry}, the goal of the symmetry breaking constraint is to force the center of the smallest circuit to be located in the lower left quadrant. To do so, \verb|min_index| is used to compute the center of the smallest circuit and to make sure that it lies in the lower-left quadrant, given by the half of the width and height of the chip:
 \begin{minted}[linenos]{minizinc}
@@ -245,7 +244,7 @@ int: min_size = min(inst_x ++ inst_y);
 
  
 \subsection{Search \& Restart}
-MiniZinc provides to the users many different solvers and the possibility to use various type of search and restart algorithms. Among the natively available solvers, only two are based on CP: Gecode and Chuffed. The latter was used, because as explained by the reference manual of MiniZinc it is based on lazy clause generation and adapts techniques from SAT solving as activity-based search heuristic. In order to take full advantage of Chuffed’s performance, the Free search option is used: this allows the solver to switch between the search exploiting annotations and the activity-based one. Then, in order to optimize the solver at its best, an optimization level O5 is used: this performs root-node-propagation with Gecode and probe values of all variables at the root node. With this kind of settings, different types of variable choice annotations were tested. Search annotations in MiniZinc specify how to search in order to find a solution to the problem. The annotation is attached to the solve item, after the keyword \verb|solve|. Six different types of annotations were tried:
+MiniZinc provides to the users many different solvers and the possibility to use various type of search and restart algorithms. Among the natively available solvers, only 2 are based on CP: Gecode and Chuffed. The latter was used, because as explained by the reference manual of MiniZinc it is based on lazy clause generation and adapts techniques from SAT solving as activity-based search heuristic. In order to take full advantage of Chuffed’s performance, the Free search option is used: this allows the solver to switch between the search exploiting annotations and the activity-based one. Then, in order to optimize the solver at its best, an optimization level O5 is used: this performs root-node-propagation with Gecode and probe values of all variables at the root node. With this kind of settings, different types of variable choice annotations were tested. Search annotations in MiniZinc specify how to search in order to find a solution to the problem. The annotation is attached to the solve item, after the keyword \verb|solve|. Six different types of annotations were tried:
 \begin{itemize}
 	\item \verb|(input_order, indomain_min)|: chooses the variable in order from array, assigns to each variable its smallest domain value;
 	\item \verb|(first_fail, indomain_min)|: chooses the variable with the smallest domain size, assigns to each variable its smallest domain value;
@@ -265,12 +264,12 @@ Any kind of depth-first search for solving optimization problems suffers from th
 Combining different types of search and restart strategies it was found that the best possible combination is formed by \verb|first_fail| as variable choice, \verb|indomain_min| as variable constraint and \verb|restart_luby(250)| as restart type.
 
 \subsection{Results}
-As shown in Fig. \ref{fig:cp}, the normal model without rotations solves all input instances except 30, 37 and 40 with a maximum time of around minutes. The addition of the symmetry breaking constraint allowed to solve some instances that previously could not be solved, also speeding up the resolution time in general and reducing the number of nodes in the tree, proving that it works properly. By adding the ability to rotate the circuits in the solutions, slightly worse times are obtained instead. This behavior was predictable since the solver must in this case perform many more combinations. Also, since each instance already allowed for the minimum chip height without the rotation, adding the rotation did not lead to better results either. The model with rotation therefore solves the same instances of \verb|cp_normal.mzn|, except for 22, 25, 32, 38, and 39, always with a maximum time of two minutes.
+As shown in Fig. \ref{fig:cp}, the normal model without rotations solves all input instances except 30, 37 and 40 with a maximum time of around 2 minutes. The addition of the symmetry breaking constraint allowed to solve some instances that previously could not be solved, also speeding up the resolution time in general and reducing the number of nodes in the tree, proving that it works properly. By adding the ability to rotate the circuits in the solutions, slightly worse times are obtained instead. This behavior was predictable since the solver must in this case perform many more combinations. Also, since each instance already allowed for the minimum chip height without the rotation, adding the rotation did not lead to better results either. The model with rotations therefore solves the same instances of \verb|cp_normal.mzn|, except for 22, 25, 32, 38, and 39, always with a maximum time of 2 minutes.
 
 \begin{figure}
     \centering
         \fbox{\includegraphics[width=\textwidth]{Images/times-cp.png}}
-        \caption{Constrain Programming times}
+        \caption{Constrain Programming times.}
     \label{fig:cp}  
 \end{figure}
 
@@ -279,12 +278,12 @@ As shown in Fig. \ref{fig:cp}, the normal model without rotations solves all inp
 \clearpage
 
 \section{Propositional Satisfiability}
-The second paradigm used to solve the combinatorial problem of \textsc{Vlsi} is Propositional SATisfiability (SAT), developed using the z3 Python package.
+The second paradigm used to solve the combinatorial problem of \textsc{Vlsi} is Propositional SATisfiability (SAT), developed using the Z3, a cross-platform package developed by Microsoft.
 
 
 
-\subsection{Variables}
-To start, the solver receives as input the variables \verb|chip_w|, \verb|n|, \verb|inst_x|, \verb|inst_y|, \verb|min_h|, \verb|max_h| and \verb|min_index|, already defined in Section \ref{sec:modelling}. Along with these variables, 3 auxiliary variables are defined:
+\subsection{Variables}\label{sec:sat-variables}
+To start, the solver receives as input the variables \verb|chip_w|, \verb|n|, \verb|inst_x|, \verb|inst_y|, \verb|min_h|, \verb|max_h| and \verb|min_index|, already defined in Section \ref{sec:modelling}. Furthermore, in this case an \verb|opt| variable is created, which contains the optimizer used by Z3 and to which all the constraints are added with an \verb|add()| function. The solver also places logical conjunctions between constraints. Along with these variables, 3 auxiliary variables are defined:
 \begin{itemize}
 	\item \verb|chip|: a $\texttt{chip\symbol{95}w} \times \texttt{max\symbol{95}h} \times \texttt{n}$ matrix of booleans where any element \verb|chip[i][j][k]| is \verb|True| if circuit \verb|k| is present at coordinates \verb|(i,j)|, \verb|False| otherwise;
 	\item \verb|corners|: a $\texttt{chip\symbol{95}w} \times \texttt{max\symbol{95}h} \times \texttt{n}$ matrix of booleans where any element \verb|corners[i][j][k]| is \verb|True| if the corners of circuit \verb|k| has coordinates \verb|(i,j)|, \verb|False| otherwise;
@@ -365,9 +364,11 @@ Even if, at first glance, it may seem that using a conjunction is wrong, since o
 To deal with rotation, a new list of booleans called \verb|rotated| is created, where the \verb|k|-th element is \verb|True| if the \verb|k|-th circuit must be rotated in the final result, \verb|False| otherwise. Two other arrays called \verb|new_inst_x| and \verb|new_inst_y| are created as well, which contain the actual horizontal and vertical dimensions:
 \begin{minted}[linenos]{python}
 rotated = BoolVector("rotated", n)
-new_inst_x = [If(rotated[k], inst_y[k], inst_x[k])
+new_inst_x = [
+    If(rotated[k], inst_y[k], inst_x[k])
     for k in range(n)]
-new_inst_y = [If(rotated[k], inst_x[k], inst_y[k])
+new_inst_y = [
+    If(rotated[k], inst_x[k], inst_y[k])
     for k in range(n)]
  \end{minted}
  
@@ -379,7 +380,7 @@ As shown in Fig. \ref{fig:sat}, SAT performs pretty badly compared to the other 
 \begin{figure}
     \centering
         \fbox{\includegraphics[width=\textwidth]{Images/times-sat.png}}
-        \caption{Propositional Satisfiability times}
+        \caption{Propositional Satisfiability times.}
     \label{fig:sat}  
 \end{figure}
 
@@ -390,17 +391,91 @@ As shown in Fig. \ref{fig:sat}, SAT performs pretty badly compared to the other 
 
 \section{Satisfiability Modulo Theories}
 
+The last solver used in the project is Satisfiability Modulo Theories. Once again, the instances were solved both in the standard way and by allowing circuits to be rotated.
+
 \subsection{Variables}
+To start, the solver receives as input the variables \verb|chip_w|, \verb|n|, \verb|inst_x|, \verb|inst_y|, \verb|min_h|, \verb|max_h| and \verb|min_index|, already defined in Section \ref{sec:modelling}. In addition, the usual \verb|bl_x|, \verb|bl_y|, and \verb|chip_h| variables are created as well. 
+
 \subsection{Constraints}
+The constraints implemented for SMT are the same used in CP, with the only difference that in this case the cumulative constraint was removed because after a series of tests it was found to worsen the general performance. In addition, since Z3 does not allow to predefine an initial domain for variables, it was necessary to add constraints limiting the domain of variables.
+\subsubsection{Boundaries consistency \& domain reduction}
+As shown in the code, the idea of the constraints is the same as used in CP and SAT. Each circuit must not exceed the size limits of the chip:
+\begin{minted}[linenos]{python}
+for k in range(n):
+    opt.add(bl_x[k] >= 0)
+    opt.add(bl_x[k] + inst_x[k] <= chip_w)
+    opt.add(bl_y[k] >= 0)
+    opt.add(bl_y[k] + inst_y[k] <= chip_h)
+\end{minted}
+
+As with CP, it is also possible to narrow the domain of \verb|chip_h| between the previously computed \verb|min_h| and \verb|max_h| values in order to reduce the size of the node tree and speed up the search:
+\begin{minted}[linenos]{python}
+opt.add(chip_h <= max_h)
+opt.add(chip_h >= min_h)
+\end{minted}
+
+\subsubsection{Non-overlapping}
+Since Z3 does not provide builtin predicates to define constraints like MiniZinc, the implementation of the non-overlapping constraint is implemented by decomposing the constraint used in CP. The idea is to verify that for each pair of circuits within the chip, either the horizontal coordinates of the bottom corners cause the two circuits to be next to each other, or the vertical coordinates of the left corners are in a position such that the two circuits are on top of each other. If any of these four conditions are met, it is assured that the two circuits will not be overlapping, so there is a logical disjunctive operator between the four constraints:
+\begin{minted}[linenos]{python}
+for k in range(n):
+        for l in range(n):
+            if k != l:
+                opt.add(
+                    Or(
+                        (bl_x[l] + new_inst_x[l] <= bl_x[k]),
+                        (bl_x[l] >= bl_x[k] + new_inst_x[k]),
+                        (bl_y[l] + new_inst_y[l] <= bl_y[k]),
+                        (bl_y[l] >= bl_y[k] + new_inst_y[k])))
+\end{minted}
+
+\subsubsection{Symmetry breaking}
+The last constraint implemented is the symmetry breaking one, whose idea has been explained in detail in Section \ref{sec:symmetry}, while the implementation is similar to that of CP (Section \ref{sec:cp-symmetry}).
+\begin{minted}[linenos]{python}
+opt.add(
+    And(
+       ((2 * bl_x[min_index] + new_inst_x[min_index]) <= chip_w),
+       ((2 * bl_y[min_index] + new_inst_y[min_index]) <= chip_h)))
+\end{minted}
+
 \subsection{Rotation}
-\subsection{Improvements}
+By changing the value of the boolean rotation it is possible to allow the solver to search for a solution in which some circuits are rotated. To do this, a vector of booleans called \verb|rotated| has been created in which the value of the \verb|k|-th element indicates whether the \verb|k|-th circuit should be rotated or not in the final solution. The arrays \verb|new_inst_x| and \verb|new_inst_y| then contain the actual dimensions of the circuits. The corresponding implementation is:
+\begin{minted}[linenos]{python}
+rotated = BoolVector("rotated", n)
+new_inst_x = [If(rotated[k], inst_y[k], inst_x[k]) for k in range(n)]
+new_inst_y = [If(rotated[k], inst_x[k], inst_y[k]) for k in range(n)]
+\end{minted}
+
+\subsection{Results}
+As shown in Fig. \ref{fig:smt}, the normal model without rotations solves all input instances until 20 with a maximum time of around 2 minutes. After that, the results worsen as the difficulty of the instances increases, only managing to solve Instances 23, 24, 27, 28, 29, 31, 32 and 36. The fact that some apparently more difficult instances are solved than others probably depends on the input order of the circuits. By adding the ability to rotate the circuits in the solutions, slightly worse times are obtained instead. This behavior was predictable since the solver must in this case perform many more combinations. Also, since each instance already allowed for the minimum chip height without the rotation, adding the rotation did not lead to better results either. The model with rotations therefore solves all instances until 18, with the exception of 11, 15, 16 and 17. Surprisingly, however, the rotation allowed instances 34, 35, and 36 to be solved, with the first two not being able to be solved using the normal model. Again, this behavior probably depends on how the circuits are ordered in the instances.
+
+\begin{figure}
+    \centering
+        \fbox{\includegraphics[width=\textwidth]{Images/times-smt.png}}
+        \caption{Satisfiability Modulo Theories times.}
+    \label{fig:smt}  
+\end{figure}
 
 \clearpage
 
 \section{Results}
 
 \subsection{Normal}
+
+\begin{figure}
+    \centering
+        \fbox{\includegraphics[width=\textwidth]{Images/times-normal.png}}
+        \caption{Times without rotations.}
+    \label{fig:normal}  
+\end{figure}
+
 \subsection{Rotated}
+
+\begin{figure}
+    \centering
+        \fbox{\includegraphics[width=\textwidth]{Images/times-rotation.png}}
+        \caption{Times with rotations.}
+    \label{fig:rotated}  
+\end{figure}
 
 \end{document}
 

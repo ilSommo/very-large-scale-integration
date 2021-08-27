@@ -2,5 +2,8 @@
 \contentsline {figure}{\numberline {1}{\ignorespaces Symmetrical configurations.}}{8}
 \contentsline {figure}{\numberline {2}{\ignorespaces Solutions with and without rotations.}}{9}
 \contentsline {figure}{\numberline {3}{\ignorespaces A graphical representation of the \texttt {max\char 95\relax h} algorithm.}}{11}
-\contentsline {figure}{\numberline {4}{\ignorespaces Constrain Programming times\relax }}{18}
-\contentsline {figure}{\numberline {5}{\ignorespaces Propositional Satisfiability times\relax }}{23}
+\contentsline {figure}{\numberline {4}{\ignorespaces Constrain Programming times.\relax }}{18}
+\contentsline {figure}{\numberline {5}{\ignorespaces Propositional Satisfiability times.\relax }}{23}
+\contentsline {figure}{\numberline {6}{\ignorespaces Satisfiability Modulo Theories times.\relax }}{27}
+\contentsline {figure}{\numberline {7}{\ignorespaces Times without rotations.\relax }}{28}
+\contentsline {figure}{\numberline {8}{\ignorespaces Times with rotations.\relax }}{29}

@@ -1,7 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{rotated} \PYG{o}{=} \PYG{n}{BoolVector}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}rotated\PYGZdq{}}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)}
-\PYG{n}{new\PYGZus{}inst\PYGZus{}x} \PYG{o}{=} \PYG{p}{[}\PYG{n}{If}\PYG{p}{(}\PYG{n}{rotated}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{n}{inst\PYGZus{}y}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{n}{inst\PYGZus{}x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{])}
-    \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)]}
-\PYG{n}{new\PYGZus{}inst\PYGZus{}y} \PYG{o}{=} \PYG{p}{[}\PYG{n}{If}\PYG{p}{(}\PYG{n}{rotated}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{n}{inst\PYGZus{}x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{n}{inst\PYGZus{}y}\PYG{p}{[}\PYG{n}{k}\PYG{p}{])}
-    \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)]}
-\end{Verbatim}

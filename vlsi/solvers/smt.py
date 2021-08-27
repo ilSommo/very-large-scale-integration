@@ -46,12 +46,15 @@ def smt(data, timeout, rotation):
     # z3 optimizer
     opt = z3.Optimize()
     opt.set('timeout', timeout * 1000)
-    # Chip height
-    chip_h = z3.Int("chip_h")
 
     # Circuits' positions
     bl_x = z3.IntVector("bl_x", n)
     bl_y = z3.IntVector("bl_y", n)
+
+    # Chip height
+    chip_h = z3.Int("chip_h")
+
+
 
     # Enter if rotation is enabled
     if rotation:
