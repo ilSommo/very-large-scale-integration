@@ -1,0 +1,8 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Introduction}{4}
+\contentsline {section}{\numberline {2}Modelling}{5}
+\contentsline {subsection}{\numberline {2.1}Variables}{5}
+\contentsline {subsection}{\numberline {2.2}Constraints}{5}
+\contentsline {subsection}{\numberline {2.3}Symmetry breaking}{6}
+\contentsline {subsection}{\numberline {2.4}Rotation}{8}
+\contentsline {subsection}{\numberline {2.5}Improvements}{9}

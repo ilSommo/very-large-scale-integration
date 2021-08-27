@@ -4,12 +4,11 @@ __author__ = 'Giacomo Berselli, Martino Pulici'
 
 from minizinc import Model, Solver
 
-from vlsi.utilities.plots import *
-from vlsi.utilities.preprocessing import *
-from vlsi.utilities.wrappers import *
-from vlsi.solvers.sat import *
-from vlsi.solvers.smt import *
+from vlsi.utilities.plots import plot_times
+from vlsi.utilities.preprocessing import preprocessing
+from vlsi.utilities.wrappers import cp_wrapper, sat_wrapper, smt_wrapper
 
+REPORT = True
 
 NORMAL = True
 ROTATION = True
@@ -50,6 +49,8 @@ times_smt_normal = []
 times_cp_rotation = []
 times_sat_rotation = []
 times_smt_rotation = []
+
+times_null = []
 
 # Minizinc solver
 solver = Solver.lookup("chuffed")
@@ -125,6 +126,8 @@ for i in range(min_ins, max_ins + 1):
     else:
         times_smt_rotation.append(0)
 
+    times_null.append(0)
+
 # Time limit
 top = max(TIMEOUT_CP, TIMEOUT_SAT, TIMEOUT_SMT)
 # Computation times
@@ -136,4 +139,12 @@ times = [
     times_smt_normal,
     times_smt_rotation]
 # Plot computation times
-plot_times(times, min_ins, max_ins, top, NORMAL, ROTATION)
+if REPORT == False:
+    plot_times(times, min_ins, max_ins, top, NORMAL, ROTATION,'')
+else:
+    plot_times(times, min_ins, max_ins, top, NORMAL, ROTATION,'')
+    plot_times([times_cp_normal,times_cp_rotation,times_null,times_null,times_null,times_null], min_ins, max_ins, top, True, True,'-cp')
+    plot_times([times_null,times_null,times_sat_normal,times_sat_rotation,times_null,times_null], min_ins, max_ins, top, True, True,'-sat')
+    plot_times([times_null,times_null,times_null,times_null,times_smt_normal,times_smt_rotation], min_ins, max_ins, top, True, True,'-smt')
+    plot_times([times_cp_normal,times_null,times_sat_normal,times_null,times_smt_normal,times_null], min_ins, max_ins, top, True, False,'-normal')
+    plot_times([times_null,times_cp_rotation,times_null,times_sat_rotation,times_null,times_smt_rotation], min_ins, max_ins, top, False, True,'-rotation')

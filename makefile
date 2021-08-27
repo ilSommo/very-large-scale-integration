@@ -23,6 +23,7 @@ bump: $(shell find . -name "*.py")
 	pdoc -o ./docs --docformat numpy vlsi
 	sed -i '' 's/# from minizinc import Instance, Status/from minizinc import Instance, Status/' vlsi/utilities/wrappers.py
 	pipenv lock
+	$(MAKE) -C report/make all
 	git add .
 	git commit -m "Bump version number to $(VERSION)"
 	git checkout master

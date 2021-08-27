@@ -71,9 +71,9 @@ def smt(data, timeout, rotation):
     for k in range(n):
         # Add constraints on blocks' positions
         opt.add(bl_x[k] >= 0)
-        opt.add(bl_x[k] <= chip_w - new_inst_x[k])
+        opt.add(bl_x[k] + new_inst_x[k] <= chip_w)
         opt.add(bl_y[k] >= 0)
-        opt.add(bl_y[k] <= chip_h - new_inst_y[k])
+        opt.add(bl_y[k] + new_inst_y[k] <= chip_h)
         # Cycle blocks
         for l in range(n):
             # Enter if indexes are different

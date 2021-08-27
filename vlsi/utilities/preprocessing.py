@@ -52,6 +52,7 @@ def compute_max_h(chip_w, inst_x, inst_y):
                 k += 1
         # Increase maximum height
         max_h += max(heights)
+
     return max_h
 
 
@@ -84,6 +85,7 @@ def preprocessing(file):
             inst_x.append(int(line_split[0]))
             inst_y.append(int(line_split[1]))
             line = infile.readline()
+
     # Index of smallest block
     min_index = int(np.argmin([inst_x[k] * inst_y[k] for k in range(n)]))
 
@@ -102,4 +104,5 @@ def preprocessing(file):
     data['min_h'] = min_h
     data['max_h'] = max_h
     data['min_index'] = min_index
+
     return(data)

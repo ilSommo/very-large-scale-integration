@@ -6,9 +6,9 @@ import datetime
 
 from minizinc import Instance, Status
 
-from .plots import *
-from vlsi.solvers.sat import *
-from vlsi.solvers.smt import *
+from vlsi.solvers.sat import sat
+from vlsi.solvers.smt import smt
+from vlsi.utilities.plots import plot_chip
 
 
 def output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y):
