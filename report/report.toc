@@ -1,8 +1,37 @@
 \select@language {english}
-\contentsline {section}{\numberline {1}Introduction}{4}
-\contentsline {section}{\numberline {2}Modelling}{5}
-\contentsline {subsection}{\numberline {2.1}Variables}{5}
-\contentsline {subsection}{\numberline {2.2}Constraints}{5}
-\contentsline {subsection}{\numberline {2.3}Symmetry breaking}{6}
-\contentsline {subsection}{\numberline {2.4}Rotation}{8}
-\contentsline {subsection}{\numberline {2.5}Improvements}{9}
+\contentsline {section}{\numberline {1}Introduction}{5}
+\contentsline {section}{\numberline {2}Modelling}{6}
+\contentsline {subsection}{\numberline {2.1}Variables}{6}
+\contentsline {subsection}{\numberline {2.2}Constraints}{6}
+\contentsline {subsubsection}{\numberline {2.2.1}Boundaries consistency}{6}
+\contentsline {subsubsection}{\numberline {2.2.2}Non-overlapping}{7}
+\contentsline {subsubsection}{\numberline {2.2.3}Symmetry breaking}{7}
+\contentsline {subsection}{\numberline {2.3}Rotation}{7}
+\contentsline {subsection}{\numberline {2.4}Improvements}{9}
+\contentsline {section}{\numberline {3}Constraint Programming}{12}
+\contentsline {subsection}{\numberline {3.1}Variables}{12}
+\contentsline {subsection}{\numberline {3.2}Constraints}{12}
+\contentsline {subsubsection}{\numberline {3.2.1}Boundaries consistency}{13}
+\contentsline {subsubsection}{\numberline {3.2.2}Non-overlapping}{13}
+\contentsline {subsubsection}{\numberline {3.2.3}Cumulative}{13}
+\contentsline {subsubsection}{\numberline {3.2.4}Symmetry breaking}{14}
+\contentsline {subsection}{\numberline {3.3}Rotation}{14}
+\contentsline {subsection}{\numberline {3.4}Search \& Restart}{15}
+\contentsline {subsection}{\numberline {3.5}Results}{17}
+\contentsline {section}{\numberline {4}Propositional Satisfiability}{19}
+\contentsline {subsection}{\numberline {4.1}Variables}{19}
+\contentsline {subsection}{\numberline {4.2}Constraints}{19}
+\contentsline {subsubsection}{\numberline {4.2.1}Structural}{19}
+\contentsline {subsubsection}{\numberline {4.2.2}Boundaries consistency}{20}
+\contentsline {subsubsection}{\numberline {4.2.3}Non-overlapping}{21}
+\contentsline {subsubsection}{\numberline {4.2.4}Symmetry breaking}{21}
+\contentsline {subsection}{\numberline {4.3}Rotation}{22}
+\contentsline {subsection}{\numberline {4.4}Results}{22}
+\contentsline {section}{\numberline {5}Satisfiability Modulo Theories}{24}
+\contentsline {subsection}{\numberline {5.1}Variables}{24}
+\contentsline {subsection}{\numberline {5.2}Constraints}{24}
+\contentsline {subsection}{\numberline {5.3}Rotation}{24}
+\contentsline {subsection}{\numberline {5.4}Improvements}{24}
+\contentsline {section}{\numberline {6}Results}{25}
+\contentsline {subsection}{\numberline {6.1}Normal}{25}
+\contentsline {subsection}{\numberline {6.2}Rotated}{25}

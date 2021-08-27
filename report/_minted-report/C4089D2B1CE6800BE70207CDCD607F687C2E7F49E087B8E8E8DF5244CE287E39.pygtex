@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{new\PYGZus{}inst\PYGZus{}x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{n}{inst\PYGZus{}y}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{k}{if} \PYG{n}{rotated}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{==} \PYG{k+kc}{True} \PYG{k}{else} \PYG{n}{inst\PYGZus{}x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}
-\PYG{n}{new\PYGZus{}inst\PYGZus{}y}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{n}{inst\PYGZus{}x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{k}{if} \PYG{n}{rotated}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{==} \PYG{k+kc}{True} \PYG{k}{else} \PYG{n}{inst\PYGZus{}y}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}
-\end{Verbatim}

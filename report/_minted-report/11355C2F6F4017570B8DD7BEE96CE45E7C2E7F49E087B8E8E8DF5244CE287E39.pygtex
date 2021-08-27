@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{chip\PYGZus{}w}\PYG{p}{):}
+    \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{max\PYGZus{}h}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+            \PYG{n}{opt}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Implies}\PYG{p}{(}\PYG{n}{corners}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{][}\PYG{n}{k}\PYG{p}{],}
+                \PYG{n}{And}\PYG{p}{(}\PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{n}{chip\PYGZus{}w} \PYG{o}{\PYGZhy{}} \PYG{n}{inst\PYGZus{}x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],}
+                    \PYG{n}{j} \PYG{o}{\PYGZlt{}=} \PYG{n}{chip\PYGZus{}h} \PYG{o}{\PYGZhy{}} \PYG{n}{inst\PYGZus{}y}\PYG{p}{[}\PYG{n}{k}\PYG{p}{])))}
+\end{Verbatim}

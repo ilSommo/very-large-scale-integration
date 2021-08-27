@@ -13,7 +13,7 @@ import numpy as np
 TOTAL_WIDTH = 0.75
 
 
-def plot_chip(file, width, height, blocks, min_index):
+def plot_chip(file, width, height, circuits, min_index):
     """Plots a chip configuration.
 
     Parameters
@@ -24,13 +24,13 @@ def plot_chip(file, width, height, blocks, min_index):
         Chip width.
     height : int
         Chip height.
-    blocks : tuple
-        List of the blocks to plot.
+    circuits : tuple
+        List of the circuits to plot.
     min_index : int
-        Index of the smallest block.
+        Index of the smallest circuit.
     """
-    # Number of blocks
-    n = len(list(blocks))
+    # Number of circuits
+    n = len(list(circuits))
     # Color list
     c = [
         tuple(
@@ -42,20 +42,20 @@ def plot_chip(file, width, height, blocks, min_index):
                 191)) for k in range(n)]
     # Create plot
     _, ax = plt.subplots(1, 1, figsize=(width/2, height/2))
-    # Cycle to draw blocks
-    for (w, h, x, y), c in zip(blocks, c):
+    # Cycle to draw circuits
+    for (w, h, x, y), c in zip(circuits, c):
         # Create colored rectangle
         ax.add_patch(Rectangle((x, y), w, h, facecolor=c))
         # Create rectangle border
         ax.add_patch(Rectangle((x, y), w, h, fill=None, ls='-', lw=2))
     # Create dot for symmetry breaking
     ax.plot(
-        blocks[min_index][2] +
+        circuits[min_index][2] +
         0.5 *
-        blocks[min_index][0],
-        blocks[min_index][3] +
+        circuits[min_index][0],
+        circuits[min_index][3] +
         0.5 *
-        blocks[min_index][1],
+        circuits[min_index][1],
         'o',
         color='white',
         zorder=3)

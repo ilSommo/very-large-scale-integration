@@ -8,20 +8,20 @@ from vlsi.utilities.plots import plot_times
 from vlsi.utilities.preprocessing import preprocessing
 from vlsi.utilities.wrappers import cp_wrapper, sat_wrapper, smt_wrapper
 
-REPORT = True
+REPORT = False
 
 NORMAL = True
-ROTATION = True
+ROTATION = False
 
-TIMEOUT_CP = 300
+TIMEOUT_CP = 0
 TIMEOUT_SAT = 300
-TIMEOUT_SMT = 300
+TIMEOUT_SMT = 0
 
 MIN_CP = 1
 MAX_CP = 40
 
 MIN_SAT = 1
-MAX_SAT = 10
+MAX_SAT = 1
 
 MIN_SMT = 1
 MAX_SMT = 40

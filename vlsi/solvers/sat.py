@@ -61,13 +61,13 @@ def sat(data, timeout, rotation):
     chip_h_int : int
         Chip height.
     result_x : int
-        Blocks' horizontal positions.
+        Circuits' horizontal positions.
     result_y : int
-        Blocks' vertical positions.
+        Circuits' vertical positions.
     result_inst_x : int
-        Blocks' widths.
+        Circuits' widths.
     result_inst_y : int
-        Blocks' heights.
+        Circuits' heights.
     computation_time : float
         Computation time in seconds.
     """
@@ -87,24 +87,26 @@ def sat(data, timeout, rotation):
     # Chip height
     chip_h = z3.Int("chip_h")
 
-    # 3D boolean matrix of blocks' presence
+    # 3D boolean matrix of circuits' presence
     chip = np.empty((chip_w, max_h, n), dtype=z3.BoolRef)
-    # 3D boolean matrix of blocks' corners
+    # 3D boolean matrix of circuits' corners
     corners = np.empty((chip_w, max_h, n), dtype=z3.BoolRef)
 
     # Enter if rotation is enabled
     if rotation:
-        # Boolean vector to flag rotated blocks
+        # Boolean vector to flag rotated circuits
         rotated = z3.BoolVector("rotated", n)
-        # Actual blocks' widths and heights
+        # Actual circuits' widths and heights
         new_inst_x = [z3.If(rotated[k], inst_y[k], inst_x[k])
                       for k in range(n)]
         new_inst_y = [z3.If(rotated[k], inst_x[k], inst_y[k])
                       for k in range(n)]
     else:
-        # Actual blocks' widths and heights
+        # Actual circuits' widths and heights
         new_inst_x = inst_x
         new_inst_y = inst_y
+
+
 
     # List of symmetry breaking constraints
     symmetry_breaking = []
@@ -114,7 +116,7 @@ def sat(data, timeout, rotation):
             # Lists of constraints
             temp_chip = []
             temp_corners = []
-            # Cycle blocks
+            # Cycle circuits
             for k in range(n):
                 # Fill chip and corners matrices
                 chip[i][j][k] = z3.Bool(
@@ -126,10 +128,8 @@ def sat(data, timeout, rotation):
                     z3.Implies(
                         corners[i][j][k],
                         z3.And(
-                            i <= chip_w -
-                            new_inst_x[k],
-                            j <= chip_h -
-                            new_inst_y[k])))
+                            i +new_inst_x[k] <= chip_w,
+                            j +new_inst_y[k]<= chip_h)))
                 # Append constraints
                 temp_chip.append(chip[i][j][k])
                 temp_corners.append(corners[i][j][k])
@@ -137,19 +137,15 @@ def sat(data, timeout, rotation):
             opt.add(at_most_one(temp_chip))
             opt.add(at_most_one(temp_corners))
             symmetry_breaking.append(
-                z3.And(
-                    z3.And(
-                        2 *
-                        i +
+                z3.And(corners[i][j][min_index]),z3.And(
+                        2 *i +
                         new_inst_x[min_index] <= chip_w,
-                        2 *
-                        j +
-                        new_inst_y[min_index] <= min_h),
-                    corners[i][j][min_index]))
+                        2 *j +
+                        new_inst_y[min_index] <= chip_h))
     # Add symmetry breaking constraints
     opt.add(z3.Or(symmetry_breaking))
-
-    # Cycle blocks
+   
+    # Cycle circuits
     for k in range(n):
         # List of constraints
         temp_corners = []
@@ -205,12 +201,14 @@ def sat(data, timeout, rotation):
                                 # Append structural constraint
                                 temp_normal.append(z3.Not(chip[ii][jj][k]))
                 # Add constraints
-                opt.add(z3.Or(z3.Not(corners[i][j][k]), z3.And(temp_normal)))
-                opt.add(z3.Or(z3.Not(corners[i][j][k]), z3.And(temp_rotated)))
+                opt.add(z3.Implies(corners[i][j][k], z3.And(temp_normal)))
+                opt.add(z3.Implies(corners[i][j][k], z3.And(temp_rotated)))
                 temp_corners.append(corners[i][j][k])
         # Add constraints
         opt.add(at_least_one(temp_corners))
         opt.add(at_most_one(temp_corners))
+
+
     # Minimize chip height
     opt.minimize(chip_h)
 

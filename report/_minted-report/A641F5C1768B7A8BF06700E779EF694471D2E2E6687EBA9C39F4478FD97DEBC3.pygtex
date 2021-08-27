@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{constraint}\PYG{l+s}{ }\PYG{n+nb+bp}{cumulative}\PYG{p}{(}\PYG{n+nv}{bl\PYGZus{}y}\PYG{p}{,}\PYG{l+s}{ }\PYG{n+nv}{inst\PYGZus{}y}\PYG{p}{,}\PYG{l+s}{ }\PYG{n+nv}{inst\PYGZus{}x}\PYG{p}{,}\PYG{l+s}{ }\PYG{n+nv}{chip\PYGZus{}w}\PYG{g+gr}{)}\PYG{p}{;}
+\PYG{k}{constraint}\PYG{l+s}{ }\PYG{n+nb+bp}{cumulative}\PYG{p}{(}\PYG{n+nv}{bl\PYGZus{}x}\PYG{p}{,}\PYG{l+s}{ }\PYG{n+nv}{inst\PYGZus{}x}\PYG{p}{,}\PYG{l+s}{ }\PYG{n+nv}{inst\PYGZus{}y}\PYG{p}{,}\PYG{l+s}{ }\PYG{n+nv}{max\PYGZus{}h}\PYG{g+gr}{)}\PYG{p}{;}
+\end{Verbatim}

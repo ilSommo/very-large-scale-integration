@@ -24,13 +24,13 @@ def smt(data, timeout, rotation):
     chip_h_int : int
         Chip height.
     result_x : int
-        Blocks' horizontal positions.
+        Circuits' horizontal positions.
     result_y : int
-        Blocks' vertical positions.
+        Circuits' vertical positions.
     result_inst_x : int
-        Blocks' widths.
+        Circuits' widths.
     result_inst_y : int
-        Blocks' heights.
+        Circuits' heights.
     computation_time : float
         Computation time in seconds.
     """
@@ -49,32 +49,32 @@ def smt(data, timeout, rotation):
     # Chip height
     chip_h = z3.Int("chip_h")
 
-    # Blocks' positions
+    # Circuits' positions
     bl_x = z3.IntVector("bl_x", n)
     bl_y = z3.IntVector("bl_y", n)
 
     # Enter if rotation is enabled
     if rotation:
-        # Boolean vector to flag rotated blocks
+        # Boolean vector to flag rotated circuits
         rotated = z3.BoolVector("rotated", n)
-        # Actual blocks' widths and heights
+        # Actual circuits' widths and heights
         new_inst_x = [z3.If(rotated[k], inst_y[k], inst_x[k])
                       for k in range(n)]
         new_inst_y = [z3.If(rotated[k], inst_x[k], inst_y[k])
                       for k in range(n)]
     else:
-        # Actual blocks' widths and heights
+        # Actual circuits' widths and heights
         new_inst_x = inst_x
         new_inst_y = inst_y
 
-    # Cycle blocks
+    # Cycle circuits
     for k in range(n):
-        # Add constraints on blocks' positions
+        # Add constraints on circuits' positions
         opt.add(bl_x[k] >= 0)
         opt.add(bl_x[k] + new_inst_x[k] <= chip_w)
         opt.add(bl_y[k] >= 0)
         opt.add(bl_y[k] + new_inst_y[k] <= chip_h)
-        # Cycle blocks
+        # Cycle circuits
         for l in range(n):
             # Enter if indexes are different
             if k != l:

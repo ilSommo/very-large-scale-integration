@@ -23,19 +23,19 @@ def output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y):
     chip_h : int
         Chip height.
     n : int
-        Number of blocks.
+        Number of circuits.
     inst_x : list
-        Blocks' widths.
+        Circuits' widths.
     inst_y : list
-        Blocks' heights.
+        Circuits' heights.
     bl_x : list
-        Blocks' horizontal positions.
+        Circuits' horizontal positions.
     bl_y : list
-        Blocks' vertical positions.
+        Circuits' vertical positions.
     """
     # Output string
     output = str(chip_w) + " " + str(chip_h) + "\n" + str(n) + "\n"
-    # Cycle for blocks
+    # Cycle for circuits
     for k in range(n):
         # Update output
         output += str(inst_x[k]) + " " + str(inst_y[k]) + \
@@ -93,12 +93,12 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
     if result.status is Status.OPTIMAL_SOLUTION:
         # Chip height
         chip_h = result['objective']
-        # Blocks' positions
+        # Circuits' positions
         bl_x = result['bl_x']
         bl_y = result['bl_y']
         # Enter if rotation is enabled
         if rotation:
-            # New blocks' widths and heigths
+            # New circuits' widths and heigths
             inst_x = result['new_inst_x']
             inst_y = result['new_inst_y']
         # Computation time

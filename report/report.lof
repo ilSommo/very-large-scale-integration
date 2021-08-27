@@ -1,4 +1,6 @@
 \select@language {english}
-\contentsline {figure}{\numberline {1}{\ignorespaces Symmetrical configurations.}}{7}
-\contentsline {figure}{\numberline {2}{\ignorespaces Solutions with and without rotations.}}{8}
-\contentsline {figure}{\numberline {3}{\ignorespaces A graphical representation of the \texttt {max\char 95\relax h} algorithm.}}{10}
+\contentsline {figure}{\numberline {1}{\ignorespaces Symmetrical configurations.}}{8}
+\contentsline {figure}{\numberline {2}{\ignorespaces Solutions with and without rotations.}}{9}
+\contentsline {figure}{\numberline {3}{\ignorespaces A graphical representation of the \texttt {max\char 95\relax h} algorithm.}}{11}
+\contentsline {figure}{\numberline {4}{\ignorespaces Constrain Programming times\relax }}{18}
+\contentsline {figure}{\numberline {5}{\ignorespaces Propositional Satisfiability times\relax }}{23}
