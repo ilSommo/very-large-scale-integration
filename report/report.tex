@@ -391,7 +391,7 @@ As shown in Fig. \ref{fig:sat}, SAT performs pretty badly compared to the other 
 
 \section{Satisfiability Modulo Theories}
 
-The last solver used in the project is Satisfiability Modulo Theories. Once again, the instances were solved both in the standard way and by allowing circuits to be rotated.
+The last solver used in the project is Satisfiability Modulo Theories (SMT). Once again, the instances were solved both in the standard way and by allowing circuits to be rotated.
 
 \subsection{Variables}
 To start, the solver receives as input the variables \verb|chip_w|, \verb|n|, \verb|inst_x|, \verb|inst_y|, \verb|min_h|, \verb|max_h| and \verb|min_index|, already defined in Section \ref{sec:modelling}. In addition, the usual \verb|bl_x|, \verb|bl_y|, and \verb|chip_h| variables are created as well. 
@@ -441,8 +441,10 @@ opt.add(
 By changing the value of the boolean rotation it is possible to allow the solver to search for a solution in which some circuits are rotated. To do this, a vector of booleans called \verb|rotated| has been created in which the value of the \verb|k|-th element indicates whether the \verb|k|-th circuit should be rotated or not in the final solution. The arrays \verb|new_inst_x| and \verb|new_inst_y| then contain the actual dimensions of the circuits. The corresponding implementation is:
 \begin{minted}[linenos]{python}
 rotated = BoolVector("rotated", n)
-new_inst_x = [If(rotated[k], inst_y[k], inst_x[k]) for k in range(n)]
-new_inst_y = [If(rotated[k], inst_x[k], inst_y[k]) for k in range(n)]
+new_inst_x = [
+    If(rotated[k], inst_y[k], inst_x[k]) for k in range(n)]
+new_inst_y = [
+    If(rotated[k], inst_x[k], inst_y[k]) for k in range(n)]
 \end{minted}
 
 \subsection{Results}

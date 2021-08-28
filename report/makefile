@@ -3,5 +3,5 @@ pdf:
 	pdflatex --shell-escape report
 
 all: pdf
-	rm *.aux *.toc *.lof *.log
+	rm *.aux *.lof *.log *.toc
 	rm -r _minted-report
