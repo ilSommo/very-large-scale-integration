@@ -19,24 +19,25 @@ int: max_h;
 % Index of smallest circuit
 int: min_index;
 
-% Circuits' positions
-array[RANGE] of var 0..(chip_w - min(inst_x)): bl_x;
-array[RANGE] of var 0..(max_h - min(inst_y)): bl_y;
 % Chip height
 var min_h..max_h: chip_h = max(i in RANGE)(bl_y[i] + inst_y[i]);
 
-% Boundaries consistency constraint
-constraint forall(i in RANGE) ((bl_x[i] + inst_x[i] <= chip_w) /\ (bl_y[i] + inst_y[i] <= max_h));
+% Circuits' positions
+array[RANGE] of var 0..(chip_w - min(inst_x)): bl_x;
+array[RANGE] of var 0..(max_h - min(inst_y)): bl_y;
+
+% Symmetry breaking constraint
+constraint symmetry_breaking_constraint(((2 * bl_x[min_index] + inst_x[min_index]) <= chip_w) /\ ((2 * bl_y[min_index] + inst_y[min_index]) <= chip_h));
 
 % Non-overlapping constraint
 constraint diffn(bl_x, bl_y, inst_x, inst_y);
 
+% Boundaries consistency constraint
+constraint forall(i in RANGE) ((bl_x[i] + inst_x[i] <= chip_w) /\ (bl_y[i] + inst_y[i] <= chip_h));
+
 % Cumulative constraints
 constraint cumulative(bl_y, inst_y, inst_x, chip_w);
-constraint cumulative(bl_x, inst_x, inst_y, max_h);
-
-% Symmetry breaking constraint
-constraint symmetry_breaking_constraint(((2 * bl_x[min_index] + inst_x[min_index]) <= chip_w) /\ ((2 * bl_y[min_index] + inst_y[min_index]) <= chip_h));
+constraint cumulative(bl_x, inst_x, inst_y, chip_h);
 
 % Search type
 ann: search_ann = 
