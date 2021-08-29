@@ -1,5 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{k}{constraint}\PYG{l+s}{ }\PYG{k}{forall}\PYG{p}{(}\PYG{n+nv}{i}\PYG{l+s}{ }\PYG{o}{in}\PYG{l+s}{ }\PYG{n+nv}{RANGE}\PYG{g+gr}{)}\PYG{l+s}{ }\PYG{p}{(}
-\PYG{l+s}{    }\PYG{p}{(}\PYG{n+nv}{bl\PYGZus{}x}\PYG{p}{[}\PYG{n+nv}{i}\PYG{g+gr}{]}\PYG{l+s}{ }\PYG{o}{+}\PYG{l+s}{ }\PYG{n+nv}{inst\PYGZus{}x}\PYG{p}{[}\PYG{n+nv}{i}\PYG{g+gr}{]}\PYG{l+s}{ }\PYG{o}{\PYGZlt{}=}\PYG{l+s}{ }\PYG{n+nv}{chip\PYGZus{}w}\PYG{g+gr}{)}\PYG{l+s}{ }\PYG{o}{/\PYGZbs{}}
-\PYG{l+s}{    }\PYG{p}{(}\PYG{n+nv}{bl\PYGZus{}y}\PYG{p}{[}\PYG{n+nv}{i}\PYG{g+gr}{]}\PYG{l+s}{ }\PYG{o}{+}\PYG{l+s}{ }\PYG{n+nv}{inst\PYGZus{}y}\PYG{p}{[}\PYG{n+nv}{i}\PYG{g+gr}{]}\PYG{l+s}{ }\PYG{o}{\PYGZlt{}=}\PYG{l+s}{ }\PYG{n+nv}{chip\PYGZus{}h}\PYG{g+gr}{))}\PYG{p}{;}
-\end{Verbatim}

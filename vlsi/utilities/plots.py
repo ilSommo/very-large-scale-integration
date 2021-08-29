@@ -1,4 +1,4 @@
-__version__ = '1.0.0-rc.4'
+__version__ = '1.0.0'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
 
@@ -42,7 +42,7 @@ def plot_chip(file, width, height, circuits, min_index):
                 191)) for k in range(n)]
 
     # Create plot
-    _, ax = plt.subplots(1, 1, figsize=(width/2, height/2))
+    _, ax = plt.subplots(1, 1, figsize=(width / 2, height / 2))
     # Cycle to draw circuits
     for (w, h, x, y), c in zip(circuits, c):
         # Create colored rectangle
@@ -81,6 +81,7 @@ def plot_chip(file, width, height, circuits, min_index):
     # Close plot
     plt.close()
 
+
 def plot_configuration(times, normal, rotation):
     """Gives a plot configuration.
 
@@ -107,63 +108,70 @@ def plot_configuration(times, normal, rotation):
         # Set plot parameters
         if any(times[0]) and any(times[2]) and any(times[4]):
             width = TOTAL_WIDTH / 6
-            offsets = [-2.5 * width, -1.5 * width, -0.5 *width, 0.5 * width, 1.5 * width, 2.5 * width]
+            offsets = [-2.5 * width, -1.5 * width, -0.5 *
+                       width, 0.5 * width, 1.5 * width, 2.5 * width]
             indexes = range(6)
         if not any(times[0]) and any(times[2]) and any(times[4]):
             width = TOTAL_WIDTH / 4
-            offsets = [0, 0, -1.5 *width, -0.5 * width, 0.5 * width, 1.5 * width]
-            indexes = [2, 3,4,5]
+            offsets = [0, 0, -1.5 * width, -0.5 *
+                       width, 0.5 * width, 1.5 * width]
+            indexes = [2, 3, 4, 5]
         if any(times[0]) and not any(times[2]) and any(times[4]):
             width = TOTAL_WIDTH / 4
-            offsets = [-1.5 *width, -0.5 * width, 0,0,0.5 * width, 1.5 * width]
-            indexes = [0,1,4,5]
+            offsets = [-1.5 * width, -0.5 * width,
+                       0, 0, 0.5 * width, 1.5 * width]
+            indexes = [0, 1, 4, 5]
         if any(times[0]) and any(times[2]) and not any(times[4]):
             width = TOTAL_WIDTH / 4
-            offsets = [-1.5 *width, -0.5 * width, 0.5 * width, 1.5 * width,0,0]
-            indexes = [0,1,2,3]
+            offsets = [-1.5 * width, -0.5 * width,
+                       0.5 * width, 1.5 * width, 0, 0]
+            indexes = [0, 1, 2, 3]
         if any(times[0]) and not any(times[2]) and not any(times[4]):
             width = TOTAL_WIDTH / 2
-            offsets = [-0.5 *width, 0.5 * width, 0,0,0,0]
-            indexes = [0,1]
+            offsets = [-0.5 * width, 0.5 * width, 0, 0, 0, 0]
+            indexes = [0, 1]
         if not any(times[0]) and any(times[2]) and not any(times[4]):
             width = TOTAL_WIDTH / 2
-            offsets = [0,0,-0.5 *width, 0.5 * width, 0,0]
-            indexes = [2,3]
+            offsets = [0, 0, -0.5 * width, 0.5 * width, 0, 0]
+            indexes = [2, 3]
         if not any(times[0]) and not any(times[2]) and any(times[4]):
             width = TOTAL_WIDTH / 2
-            offsets = [0,0,0,0,-0.5 *width, 0.5 * width]
-            indexes = [4,5]
+            offsets = [0, 0, 0, 0, -0.5 * width, 0.5 * width]
+            indexes = [4, 5]
 
     # Enter for given configurations
     if normal and not rotation:
         # Set plot parameters
         if any(times[0]) and any(times[2]) and any(times[4]):
             width = TOTAL_WIDTH / 3
-            offsets = [-width, -width, 0,0, width, width]
-            indexes = [0,2,4]
+            offsets = [-width, -width, 0, 0, width, width]
+            indexes = [0, 2, 4]
         if not any(times[0]) and any(times[2]) and any(times[4]):
             width = TOTAL_WIDTH / 2
-            offsets = [0, 0, -0.5 *width, -0.5 * width, 0.5 * width, 0.5 * width]
-            indexes = [2,4]
+            offsets = [0, 0, -0.5 * width, -0.5 *
+                       width, 0.5 * width, 0.5 * width]
+            indexes = [2, 4]
         if any(times[0]) and not any(times[2]) and any(times[4]):
             width = TOTAL_WIDTH / 2
-            offsets = [-0.5 *width, -0.5 * width,0,0, 0.5 * width, 0.5 * width]
-            indexes = [0,4]
+            offsets = [-0.5 * width, -0.5 * width,
+                       0, 0, 0.5 * width, 0.5 * width]
+            indexes = [0, 4]
         if any(times[0]) and any(times[2]) and not any(times[4]):
             width = TOTAL_WIDTH / 2
-            offsets = [-0.5 *width, -0.5 * width,0.5 * width, 0.5 * width,0,0]
-            indexes = [0,2]
+            offsets = [-0.5 * width, -0.5 * width,
+                       0.5 * width, 0.5 * width, 0, 0]
+            indexes = [0, 2]
         if any(times[0]) and not any(times[2]) and not any(times[4]):
             width = TOTAL_WIDTH / 1
-            offsets = [0,0,0,0,0,0]
+            offsets = [0, 0, 0, 0, 0, 0]
             indexes = [0]
         if not any(times[0]) and any(times[2]) and not any(times[4]):
             width = TOTAL_WIDTH / 1
-            offsets = [0,0,0,0,0,0]
+            offsets = [0, 0, 0, 0, 0, 0]
             indexes = [2]
         if not any(times[0]) and not any(times[2]) and any(times[4]):
             width = TOTAL_WIDTH / 1
-            offsets = [0,0,0,0,0,0]
+            offsets = [0, 0, 0, 0, 0, 0]
             indexes = [4]
 
     # Enter for given configurations
@@ -171,37 +179,40 @@ def plot_configuration(times, normal, rotation):
         # Set plot parameters
         if any(times[1]) and any(times[3]) and any(times[5]):
             width = TOTAL_WIDTH / 3
-            offsets = [-width, -width, 0,0, width, width]
-            indexes = [1,3,5]
+            offsets = [-width, -width, 0, 0, width, width]
+            indexes = [1, 3, 5]
         if not any(times[1]) and any(times[3]) and any(times[5]):
             width = TOTAL_WIDTH / 2
-            offsets = [0, 0, -0.5 *width, -0.5 * width, 0.5 * width, 0.5 * width]
-            indexes = [3,5]
+            offsets = [0, 0, -0.5 * width, -0.5 *
+                       width, 0.5 * width, 0.5 * width]
+            indexes = [3, 5]
         if any(times[1]) and not any(times[3]) and any(times[5]):
             width = TOTAL_WIDTH / 2
-            offsets = [-0.5 *width, -0.5 * width,0,0, 0.5 * width, 0.5 * width]
-            indexes = [1,5]
+            offsets = [-0.5 * width, -0.5 * width,
+                       0, 0, 0.5 * width, 0.5 * width]
+            indexes = [1, 5]
         if any(times[1]) and any(times[3]) and not any(times[5]):
             width = TOTAL_WIDTH / 2
-            offsets = [-0.5 *width, -0.5 * width,0.5 * width, 0.5 * width,0,0]
-            indexes = [1,3]
+            offsets = [-0.5 * width, -0.5 * width,
+                       0.5 * width, 0.5 * width, 0, 0]
+            indexes = [1, 3]
         if any(times[1]) and not any(times[3]) and not any(times[5]):
             width = TOTAL_WIDTH / 1
-            offsets = [0,0,0,0,0,0]
+            offsets = [0, 0, 0, 0, 0, 0]
             indexes = [1]
         if not any(times[1]) and any(times[3]) and not any(times[5]):
             width = TOTAL_WIDTH / 1
-            offsets = [0,0,0,0,0,0]
+            offsets = [0, 0, 0, 0, 0, 0]
             indexes = [3]
         if not any(times[1]) and not any(times[3]) and any(times[5]):
             width = TOTAL_WIDTH / 1
-            offsets = [0,0,0,0,0,0]
+            offsets = [0, 0, 0, 0, 0, 0]
             indexes = [5]
-    
+
     return width, offsets, indexes
 
 
-def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
+def plot_times(times, min_ins, max_ins, top, normal, rotation, name):
     """Plots the time graph.
 
     Parameters
@@ -256,7 +267,7 @@ def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
     plt.tick_params(axis='y', which='both')
     ax.set_xlim(min_ins - (1 - TOTAL_WIDTH / 2),
                 max_ins + (1 - TOTAL_WIDTH / 2))
-    ax.set_ylim(0.001,top)
+    ax.set_ylim(0.001, top)
     ax.set_xticks(range(min_ins, max_ins + 1))
     ax.set_xlabel('instance')
     ax.set_ylabel('seconds')
@@ -267,6 +278,6 @@ def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
     # Set plot title
     plt.title('Times')
     # Save plot
-    plt.savefig('out/times'+name+'.png')
+    plt.savefig('out/times' + name + '.png')
     # Close plot
     plt.close()

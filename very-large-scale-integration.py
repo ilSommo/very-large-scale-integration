@@ -1,4 +1,4 @@
-__version__ = '1.0.0-rc.4'
+__version__ = '1.0.0'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
 
@@ -21,17 +21,29 @@ TIMEOUT_SMT_NORMAL = 300
 TIMEOUT_SMT_ROTATION = 300
 
 # Instances to solve
-LIST_CP_NORMAL = list(range(1,40+1))
-LIST_CP_ROTATION = list(range(1,40+1))
-LIST_SAT_NORMAL = list(range(1,40+1))
-LIST_SAT_ROTATION = list(range(1,40+1))
-LIST_SMT_NORMAL = list(range(1,40+1))
-LIST_SMT_ROTATION = list(range(1,40+1))
+LIST_CP_NORMAL = list(range(1, 40 + 1))
+LIST_CP_ROTATION = list(range(1, 40 + 1))
+LIST_SAT_NORMAL = list(range(1, 40 + 1))
+LIST_SAT_ROTATION = list(range(1, 40 + 1))
+LIST_SMT_NORMAL = list(range(1, 40 + 1))
+LIST_SMT_ROTATION = list(range(1, 40 + 1))
 
 # Timeouts list
-timeouts = [TIMEOUT_CP_NORMAL,TIMEOUT_CP_ROTATION,TIMEOUT_SAT_NORMAL,TIMEOUT_SAT_ROTATION,TIMEOUT_SMT_NORMAL,TIMEOUT_SMT_ROTATION]
+timeouts = [
+    TIMEOUT_CP_NORMAL,
+    TIMEOUT_CP_ROTATION,
+    TIMEOUT_SAT_NORMAL,
+    TIMEOUT_SAT_ROTATION,
+    TIMEOUT_SMT_NORMAL,
+    TIMEOUT_SMT_ROTATION]
 # Instances lists
-lists = [LIST_CP_NORMAL,LIST_CP_ROTATION,LIST_SAT_NORMAL,LIST_SAT_ROTATION,LIST_SMT_NORMAL,LIST_SMT_ROTATION]
+lists = [
+    LIST_CP_NORMAL,
+    LIST_CP_ROTATION,
+    LIST_SAT_NORMAL,
+    LIST_SAT_ROTATION,
+    LIST_SMT_NORMAL,
+    LIST_SMT_ROTATION]
 
 # Minimum and maximum instances lists
 mins = []
@@ -66,12 +78,12 @@ times_null = []
 solver = Solver.lookup('chuffed')
 
 # Enter if normal configuration is enabled
-if TIMEOUT_CP_NORMAL !=0:
+if TIMEOUT_CP_NORMAL != 0:
     # Minizinc normal model
     model_normal = Model('src/cp/cp_normal.mzn')
 
 # Enter if rotation configuration is enabled
-if TIMEOUT_CP_ROTATION !=0:
+if TIMEOUT_CP_ROTATION != 0:
     # Minizinc rotation model
     model_rotation = Model('src/cp/cp_rotation.mzn')
 
@@ -159,13 +171,68 @@ normal = True if timeouts[0] or timeouts[2] or timeouts[4] else False
 rotation = True if timeouts[1] or timeouts[3] or timeouts[5] else False
 
 # Enter for report
-if REPORT == True:
+if REPORT:
     # Plot times combinations
-    plot_times([times_cp_normal,times_cp_rotation,times_null,times_null,times_null,times_null], min_ins, max_ins, top, True, True,'-cp')
-    plot_times([times_null,times_null,times_sat_normal,times_sat_rotation,times_null,times_null], min_ins, max_ins, top, True, True,'-sat')
-    plot_times([times_null,times_null,times_null,times_null,times_smt_normal,times_smt_rotation], min_ins, max_ins, top, True, True,'-smt')
-    plot_times([times_cp_normal,times_null,times_sat_normal,times_null,times_smt_normal,times_null], min_ins, max_ins, top, True, False,'-normal')
-    plot_times([times_null,times_cp_rotation,times_null,times_sat_rotation,times_null,times_smt_rotation], min_ins, max_ins, top, False, True,'-rotation')
+    plot_times([times_cp_normal,
+                times_cp_rotation,
+                times_null,
+                times_null,
+                times_null,
+                times_null],
+               min_ins,
+               max_ins,
+               top,
+               True,
+               True,
+               '-cp')
+    plot_times([times_null,
+                times_null,
+                times_sat_normal,
+                times_sat_rotation,
+                times_null,
+                times_null],
+               min_ins,
+               max_ins,
+               top,
+               True,
+               True,
+               '-sat')
+    plot_times([times_null,
+                times_null,
+                times_null,
+                times_null,
+                times_smt_normal,
+                times_smt_rotation],
+               min_ins,
+               max_ins,
+               top,
+               True,
+               True,
+               '-smt')
+    plot_times([times_cp_normal,
+                times_null,
+                times_sat_normal,
+                times_null,
+                times_smt_normal,
+                times_null],
+               min_ins,
+               max_ins,
+               top,
+               True,
+               False,
+               '-normal')
+    plot_times([times_null,
+                times_cp_rotation,
+                times_null,
+                times_sat_rotation,
+                times_null,
+                times_smt_rotation],
+               min_ins,
+               max_ins,
+               top,
+               False,
+               True,
+               '-rotation')
 else:
     # Plot all times
-    plot_times(times, min_ins, max_ins, top, normal, rotation,'')
+    plot_times(times, min_ins, max_ins, top, normal, rotation, '')

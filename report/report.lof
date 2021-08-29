@@ -1,9 +1,0 @@
-\select@language {english}
-\contentsline {figure}{\numberline {1}{\ignorespaces Symmetrical configurations.}}{8}{figure.caption.3}
-\contentsline {figure}{\numberline {2}{\ignorespaces Solutions with and without rotations.}}{9}{figure.caption.4}
-\contentsline {figure}{\numberline {3}{\ignorespaces A graphical representation of the \texttt {max\char 95\relax h} algorithm.}}{11}{figure.caption.5}
-\contentsline {figure}{\numberline {4}{\ignorespaces Constrain Programming times.\relax }}{18}{figure.caption.6}
-\contentsline {figure}{\numberline {5}{\ignorespaces Propositional Satisfiability times.\relax }}{23}{figure.caption.7}
-\contentsline {figure}{\numberline {6}{\ignorespaces Satisfiability Modulo Theories times.\relax }}{27}{figure.caption.8}
-\contentsline {figure}{\numberline {7}{\ignorespaces Times without rotations.\relax }}{28}{figure.caption.9}
-\contentsline {figure}{\numberline {8}{\ignorespaces Times with rotations.\relax }}{30}{figure.caption.10}
