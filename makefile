@@ -8,6 +8,9 @@ dev:
 	pipenv sync --dev
 	pipenv shell
 
+rm:
+	pipenv --rm
+
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 ifneq (,$(findstring release-,$(BRANCH)))

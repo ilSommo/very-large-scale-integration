@@ -24,6 +24,12 @@ $ make dev
 $ python very-large-scale-interaction.py
 ```
 
+## Remove
+
+```console
+$ make rm
+```
+
 ## Documentation
 
 To browse documentation, open `docs/index.html` with a web browser.
