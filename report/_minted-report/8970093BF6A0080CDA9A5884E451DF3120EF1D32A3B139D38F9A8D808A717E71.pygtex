@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+    \PYG{n}{opt}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{bl\PYGZus{}x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{n}{opt}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{bl\PYGZus{}x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{+} \PYG{n}{inst\PYGZus{}x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{n}{chip\PYGZus{}w}\PYG{p}{)}
+    \PYG{n}{opt}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{bl\PYGZus{}y}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{n}{opt}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{bl\PYGZus{}y}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{+} \PYG{n}{inst\PYGZus{}y}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{n}{chip\PYGZus{}h}\PYG{p}{)}
+\end{Verbatim}

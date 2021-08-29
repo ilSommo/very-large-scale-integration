@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
- \PYG{n+nv}{constraint} \PYG{n+nv}{forall}\PYG{p}{(}\PYG{n+nv}{i} \PYG{k}{in} \PYG{n+nv}{RANGE}\PYG{p}{)} \PYG{p}{(}
- 	\PYG{p}{(}\PYG{n+nv}{bl\PYGZus{}x}\PYG{p}{[}\PYG{n+nv}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n+nv}{inst\PYGZus{}x}\PYG{p}{[}\PYG{n+nv}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{n+nv}{chip\PYGZus{}w}\PYG{p}{)} \PYG{o}{/}\PYG{err}{\PYGZbs{}}
-	\PYG{p}{(}\PYG{n+nv}{bl\PYGZus{}y}\PYG{p}{[}\PYG{n+nv}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n+nv}{inst\PYGZus{}y}\PYG{p}{[}\PYG{n+nv}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{n+nv}{max\PYGZus{}h}\PYG{p}{)}
-\PYG{p}{);}
-\end{Verbatim}

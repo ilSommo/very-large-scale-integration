@@ -89,6 +89,7 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
             seconds=timeout),
         optimisation_level=5,
         free_search=True)
+
     # Enter if optimal solution is found
     if result.status is Status.OPTIMAL_SOLUTION:
         # Chip height
@@ -115,6 +116,7 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
         time = 0
         # Print failure status
         print("FAIL " + str(file))
+    
     return time
 
 
@@ -145,8 +147,10 @@ def sat_wrapper(file, data, timeout, rotation):
     inst_x = data['inst_x']
     inst_y = data['inst_y']
     min_index = data['min_index']
+
     # Call SAT solver
     chip_h, bl_x, bl_y, inst_x, inst_y, time = sat(data, timeout, rotation)
+
     # Enter if a result is found
     if chip_h:
         # Write output
@@ -190,8 +194,10 @@ def smt_wrapper(file, data, timeout, rotation):
     chip_w = data['chip_w']
     n = data['n']
     min_index = data['min_index']
+
     # Call SMT solver
     chip_h, bl_x, bl_y, inst_x, inst_y, time = smt(data, timeout, rotation)
+    
     # Enter if a result is found
     if chip_h:
         # Write output

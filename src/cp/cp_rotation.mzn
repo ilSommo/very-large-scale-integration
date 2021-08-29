@@ -1,6 +1,7 @@
 include "globals.mzn";
 
 
+% Search & restart
 int: SEARCH_TYPE = 2;
 int: RESTART_TYPE = 4;
 
@@ -18,16 +19,14 @@ int: min_h;
 int: max_h;
 % Index of smallest circuit
 int: min_index;
+
 % Minimum circuit size
 int: min_size = min(inst_x ++ inst_y);
-
 % Chip height
 var min_h..max_h: chip_h = max(i in RANGE )(bl_y[i] + new_inst_y[i]);
-
 % Circuits' positions
 array[RANGE] of var 0..(chip_w - min_size): bl_x;
 array[RANGE] of var 0..(max_h - min_size): bl_y;
-
 % Rotation flags
 array[RANGE] of var bool: rotated;
 % Actual circuits' widths and heights

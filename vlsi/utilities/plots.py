@@ -40,6 +40,7 @@ def plot_chip(file, width, height, circuits, min_index):
                 n,
                 0.75,
                 191)) for k in range(n)]
+
     # Create plot
     _, ax = plt.subplots(1, 1, figsize=(width/2, height/2))
     # Cycle to draw circuits
@@ -80,30 +81,28 @@ def plot_chip(file, width, height, circuits, min_index):
     # Close plot
     plt.close()
 
-
-def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
-    """Plots the time graph.
+def plot_configuration(times, normal, rotation):
+    """Gives a plot configuration.
 
     Parameters
     ----------
     times : list
-        Times to plot.
-    min_ins : int
-        Minimum instance to plot.
-    max_ins : int
-        Maximum instance to plot.
-    top : int
-        Time limit.
+        List of times lists.
     normal : bool
-        Flag to plot normal times.
+        Flag for normal.
     rotation : bool
-        Flag to plot rotation times.
+        Flag for rotation.
+
+    Returns
+    -------
+    width : float
+        Width of each bar.
+    offsets : list
+        List of bar offsets.
+    indexes : list
+        Indexes of bars to plot.
     """
-    # Bar labels
-    labels = ["cp", "cp-rot", "sat", "sat-rot", "smt", "smt-rot"]
-    # Bar colors
-    colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
-    # Enter for various configurations
+    # Enter for given configurations
     if normal and rotation:
         # Set plot parameters
         if any(times[0]) and any(times[2]) and any(times[4]):
@@ -134,6 +133,8 @@ def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
             width = TOTAL_WIDTH / 2
             offsets = [0,0,0,0,-0.5 *width, 0.5 * width]
             indexes = [4,5]
+
+    # Enter for given configurations
     if normal and not rotation:
         # Set plot parameters
         if any(times[0]) and any(times[2]) and any(times[4]):
@@ -164,6 +165,8 @@ def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
             width = TOTAL_WIDTH / 1
             offsets = [0,0,0,0,0,0]
             indexes = [4]
+
+    # Enter for given configurations
     if not normal and rotation:
         # Set plot parameters
         if any(times[1]) and any(times[3]) and any(times[5]):
@@ -194,6 +197,35 @@ def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
             width = TOTAL_WIDTH / 1
             offsets = [0,0,0,0,0,0]
             indexes = [5]
+    
+    return width, offsets, indexes
+
+
+def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
+    """Plots the time graph.
+
+    Parameters
+    ----------
+    times : list
+        Times to plot.
+    min_ins : int
+        Minimum instance to plot.
+    max_ins : int
+        Maximum instance to plot.
+    top : int
+        Time limit.
+    normal : bool
+        Flag to plot normal times.
+    rotation : bool
+        Flag to plot rotation times.
+    """
+    # Bar labels
+    labels = ["cp", "cp-rot", "sat", "sat-rot", "smt", "smt-rot"]
+    # Bar colors
+    colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+    # Plot configuration
+    width, offsets, indexes = plot_configuration(times, normal, rotation)
+
     # Create plot
     _, ax = plt.subplots(1, 1, figsize=(12.8, 7.2))
     # Cycle to draw bars

@@ -88,10 +88,8 @@ def preprocessing(file):
 
     # Index of smallest circuit
     min_index = int(np.argmin([inst_x[k] * inst_y[k] for k in range(n)]))
-
     # Minimum height of chip
     min_h = sum([inst_x[k] * inst_y[k] for k in range(n)]) // chip_w
-
     # Maximum height of chip
     max_h = compute_max_h(chip_w, inst_x, inst_y)
 

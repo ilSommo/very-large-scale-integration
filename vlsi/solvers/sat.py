@@ -23,6 +23,7 @@ def at_least_one(bool_vars):
         z3 constraints.
     """
     constraints = [z3.Or(bool_vars)]
+
     return constraints
 
 
@@ -41,6 +42,7 @@ def at_most_one(bool_vars):
     """
     constraints = [z3.Not(z3.And(pair[0], pair[1]))
                    for pair in combinations(bool_vars, 2)]
+
     return constraints
 
 
@@ -80,7 +82,7 @@ def sat(data, timeout, rotation):
     max_h = data['max_h']
     min_index = data['min_index']
 
-    # z3 optimizer
+    # Z3 optimizer
     opt = z3.Optimize()
     opt.set("timeout", timeout * 1000)
 
@@ -106,14 +108,12 @@ def sat(data, timeout, rotation):
         new_inst_x = inst_x
         new_inst_y = inst_y
 
-
-
     # List of symmetry breaking constraints
     symmetry_breaking = []
     # Cycle coordinates
     for i in range(chip_w):
         for j in range(max_h):
-            # Lists of constraints
+            # Lists for non-overlapping constraints
             temp_chip = []
             temp_corners = []
             # Cycle circuits
@@ -123,36 +123,36 @@ def sat(data, timeout, rotation):
                     "chip_" + str(i) + "_" + str(j) + "_" + str(k))
                 corners[i][j][k] = z3.Bool(
                     "corners_" + str(i) + "_" + str(j) + "_" + str(k))
-                # Constraint on corners' positions
+                # Boundaries consistency constraint
                 opt.add(
                     z3.Implies(
                         corners[i][j][k],
                         z3.And(
                             i +new_inst_x[k] <= chip_w,
                             j +new_inst_y[k]<= chip_h)))
-                # Append constraints
+                # Append non-overlapping constraints
                 temp_chip.append(chip[i][j][k])
                 temp_corners.append(corners[i][j][k])
-            # Add constraints
+            # Add non-overlapping constraints
             opt.add(at_most_one(temp_chip))
             opt.add(at_most_one(temp_corners))
             symmetry_breaking.append(
-                z3.And(corners[i][j][min_index]),z3.And(
+                z3.And(corners[i][j][min_index],z3.And(
                         2 *i +
                         new_inst_x[min_index] <= chip_w,
                         2 *j +
-                        new_inst_y[min_index] <= chip_h))
+                        new_inst_y[min_index] <= chip_h)))
     # Add symmetry breaking constraints
     opt.add(z3.Or(symmetry_breaking))
    
     # Cycle circuits
     for k in range(n):
-        # List of constraints
+        # List of structural constraints
         temp_corners = []
         # Cycle coordinates
         for i in range(chip_w):
             for j in range(max_h):
-                # Lists of constraints
+                # Lists of structural constraints
                 temp_normal = []
                 temp_rotated = []
                 # Cycle coordinates
@@ -200,14 +200,13 @@ def sat(data, timeout, rotation):
                             else:
                                 # Append structural constraint
                                 temp_normal.append(z3.Not(chip[ii][jj][k]))
-                # Add constraints
+                # Add structural constraints
                 opt.add(z3.Implies(corners[i][j][k], z3.And(temp_normal)))
                 opt.add(z3.Implies(corners[i][j][k], z3.And(temp_rotated)))
                 temp_corners.append(corners[i][j][k])
-        # Add constraints
+        # Add structural constraints
         opt.add(at_least_one(temp_corners))
         opt.add(at_most_one(temp_corners))
-
 
     # Minimize chip height
     opt.minimize(chip_h)
@@ -247,4 +246,5 @@ def sat(data, timeout, rotation):
         chip_h_int = None
     # Computation time
     computation_time = end - start
+    
     return chip_h_int, result_x, result_y, result_inst_x, result_inst_y, computation_time

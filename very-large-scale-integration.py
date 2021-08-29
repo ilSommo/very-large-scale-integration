@@ -8,8 +8,11 @@ from vlsi.utilities.plots import plot_times
 from vlsi.utilities.preprocessing import preprocessing
 from vlsi.utilities.wrappers import cp_wrapper, sat_wrapper, smt_wrapper
 
+
+# Flag for report
 REPORT = True
 
+# Timeouts
 TIMEOUT_CP_NORMAL = 300
 TIMEOUT_CP_ROTATION = 300
 TIMEOUT_SAT_NORMAL = 300
@@ -17,31 +20,38 @@ TIMEOUT_SAT_ROTATION = 300
 TIMEOUT_SMT_NORMAL = 300
 TIMEOUT_SMT_ROTATION = 300
 
+# Instances to solve
+LIST_CP_NORMAL = list(range(1,40+1))
+LIST_CP_ROTATION = list(range(1,40+1))
+LIST_SAT_NORMAL = list(range(1,40+1))
+LIST_SAT_ROTATION = list(range(1,40+1))
+LIST_SMT_NORMAL = list(range(1,40+1))
+LIST_SMT_ROTATION = list(range(1,40+1))
 
-LIST_CP_NORMAL = list(range(1,39+1))
-LIST_CP_ROTATION = list(range(1,21+1))+[23,24]+list(range(26,29+1))+[31]+list(range(33,36+1))
-LIST_SAT_NORMAL = range(1,10+1)
-LIST_SAT_ROTATION = range(1,10+1)
-LIST_SMT_NORMAL = range(1,40+1)
-LIST_SMT_ROTATION = range(1,40+1)
-
+# Timeouts list
 timeouts = [TIMEOUT_CP_NORMAL,TIMEOUT_CP_ROTATION,TIMEOUT_SAT_NORMAL,TIMEOUT_SAT_ROTATION,TIMEOUT_SMT_NORMAL,TIMEOUT_SMT_ROTATION]
+# Instances lists
 lists = [LIST_CP_NORMAL,LIST_CP_ROTATION,LIST_SAT_NORMAL,LIST_SAT_ROTATION,LIST_SMT_NORMAL,LIST_SMT_ROTATION]
 
+# Minimum and maximum instances lists
 mins = []
 maxs = []
+# Cycle approaches
 for i in range(6):
+    # Enter if timeout is 0
     if timeouts[i] == 0:
+        # Empty list of instances
         lists[i] = []
     else:
+        # Append minimum and maximum instances
         mins.append(min(lists[i]))
         maxs.append(max(lists[i]))
 
-# Minimum instance
+# Minimum and maximum instances
 min_ins = min(mins)
 max_ins = max(maxs)
 
-# Time lists
+# Times lists
 times_cp_normal = []
 times_cp_rotation = []
 times_sat_normal = []
@@ -49,6 +59,7 @@ times_sat_rotation = []
 times_smt_normal = []
 times_smt_rotation = []
 
+# Null time lists
 times_null = []
 
 # Minizinc solver
@@ -71,6 +82,7 @@ for i in range(min_ins, max_ins + 1):
     # Data dictionary
     data = preprocessing(file)
 
+    # Enter if instance is to solve
     if i in lists[0]:
         # Solve normal CP
         time = cp_wrapper(
@@ -84,6 +96,7 @@ for i in range(min_ins, max_ins + 1):
     else:
         times_cp_normal.append(0)
 
+    # Enter if instance is to solve
     if i in lists[1]:
         # Solve rotation CP
         time = cp_wrapper(
@@ -97,6 +110,7 @@ for i in range(min_ins, max_ins + 1):
     else:
         times_cp_rotation.append(0)
 
+    # Enter if instance is to solve
     if i in lists[2]:
         # Solve normal SAT
         time = sat_wrapper(file, data, timeouts[2], rotation=False)
@@ -104,6 +118,7 @@ for i in range(min_ins, max_ins + 1):
     else:
         times_sat_normal.append(0)
 
+    # Enter if instance is to solve
     if i in lists[3]:
         # Solve rotation CP
         time = sat_wrapper(file, data, timeouts[3], rotation=True)
@@ -111,6 +126,7 @@ for i in range(min_ins, max_ins + 1):
     else:
         times_sat_rotation.append(0)
 
+    # Enter if instance is to solve
     if i in lists[4]:
         # Solve normal SMT
         time = smt_wrapper(file, data, timeouts[4], rotation=False)
@@ -118,6 +134,7 @@ for i in range(min_ins, max_ins + 1):
     else:
         times_smt_normal.append(0)
 
+    # Enter if instance is to solve
     if i in lists[5]:
         # Solve rotation SMT
         time = smt_wrapper(file, data, timeouts[5], rotation=True)
@@ -137,15 +154,16 @@ times = [
     times_sat_rotation,
     times_smt_normal,
     times_smt_rotation]
-# Plot computation times
-if timeouts[0] or timeouts[2] or timeouts[4]:
-    normal = True
-if timeouts[1] or timeouts[3] or timeouts[5]:
-    rotation = True
-if REPORT == False:
-    plot_times(times, min_ins, max_ins, top, normal, rotation,'')
-else:
-    plot_times(times, min_ins, max_ins, top, normal, rotation,'')
+# Falgs for plots
+normal = True if timeouts[0] or timeouts[2] or timeouts[4] else False
+rotation = True if timeouts[1] or timeouts[3] or timeouts[5] else False
+
+# Plot all times
+plot_times(times, min_ins, max_ins, top, normal, rotation,'')
+
+# Enter for report
+if REPORT == True:
+    # Plot times combinations
     plot_times([times_cp_normal,times_cp_rotation,times_null,times_null,times_null,times_null], min_ins, max_ins, top, True, True,'-cp')
     plot_times([times_null,times_null,times_sat_normal,times_sat_rotation,times_null,times_null], min_ins, max_ins, top, True, True,'-sat')
     plot_times([times_null,times_null,times_null,times_null,times_smt_normal,times_smt_rotation], min_ins, max_ins, top, True, True,'-smt')

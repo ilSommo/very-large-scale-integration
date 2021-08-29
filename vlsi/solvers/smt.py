@@ -43,7 +43,7 @@ def smt(data, timeout, rotation):
     max_h = data['max_h']
     min_index = data['min_index']
 
-    # z3 optimizer
+    # Z3 optimizer
     opt = z3.Optimize()
     opt.set('timeout', timeout * 1000)
 
@@ -54,7 +54,9 @@ def smt(data, timeout, rotation):
     # Chip height
     chip_h = z3.Int("chip_h")
 
-
+    # Add chip height constraints
+    opt.add(chip_h <= max_h)
+    opt.add(chip_h >= min_h)
 
     # Enter if rotation is enabled
     if rotation:
@@ -72,26 +74,20 @@ def smt(data, timeout, rotation):
 
     # Cycle circuits
     for k in range(n):
-        # Add constraints on circuits' positions
+        # Add boundaries consistency constraints
         opt.add(bl_x[k] >= 0)
         opt.add(bl_x[k] + new_inst_x[k] <= chip_w)
         opt.add(bl_y[k] >= 0)
         opt.add(bl_y[k] + new_inst_y[k] <= chip_h)
         # Cycle circuits
-        for l in range(n):
-            # Enter if indexes are different
-            if k != l:
-                # Add reciprocal positional constraints
-                opt.add(
-                    z3.Or(
-                        (bl_x[l] + new_inst_x[l] <= bl_x[k]),
-                        (bl_x[l] >= bl_x[k] + new_inst_x[k]),
-                        (bl_y[l] + new_inst_y[l] <= bl_y[k]),
-                        (bl_y[l] >= bl_y[k] + new_inst_y[k])))
-
-    # Add chip height constraints
-    opt.add(chip_h <= max_h)
-    opt.add(chip_h >= min_h)
+        for l in range(k + 1, n):
+            # Add non-overlapping constraints
+            opt.add(
+                z3.Or(
+                    (bl_x[k] + new_inst_x[k] <= bl_x[l]),
+                    (bl_x[k] >= bl_x[l] + new_inst_x[l]),
+                    (bl_y[k] + new_inst_y[k] <= bl_y[l]),
+                    (bl_y[k] >= bl_y[l] + new_inst_y[l])))
 
     # Add symmetry breaking constraints
     opt.add(
@@ -130,7 +126,7 @@ def smt(data, timeout, rotation):
     else:
         # Chip null height
         chip_h_int = None
-
     # Computation time
     computation_time = end - start
+    
     return chip_h_int, result_x, result_y, result_inst_x, result_inst_y, computation_time
