@@ -21,7 +21,7 @@ $ make dev
 ## Run
 
 ```console
-$ python very-large-scale-interaction.py
+$ python very-large-scale-integration.py
 ```
 
 ## Remove
