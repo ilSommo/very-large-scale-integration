@@ -6,9 +6,9 @@ import datetime
 
 from minizinc import Instance, Status
 
-from .plots import *
-from vlsi.solvers.sat import *
-from vlsi.solvers.smt import *
+from vlsi.solvers.sat import sat
+from vlsi.solvers.smt import smt
+from vlsi.utilities.plots import plot_chip
 
 
 def output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y):
@@ -23,19 +23,19 @@ def output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y):
     chip_h : int
         Chip height.
     n : int
-        Number of blocks.
+        Number of circuits.
     inst_x : list
-        Blocks' widths.
+        Circuits' widths.
     inst_y : list
-        Blocks' heights.
+        Circuits' heights.
     bl_x : list
-        Blocks' horizontal positions.
+        Circuits' horizontal positions.
     bl_y : list
-        Blocks' vertical positions.
+        Circuits' vertical positions.
     """
     # Output string
     output = str(chip_w) + " " + str(chip_h) + "\n" + str(n) + "\n"
-    # Cycle for blocks
+    # Cycle for circuits
     for k in range(n):
         # Update output
         output += str(inst_x[k]) + " " + str(inst_y[k]) + \
@@ -89,16 +89,17 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
             seconds=timeout),
         optimisation_level=5,
         free_search=True)
+
     # Enter if optimal solution is found
     if result.status is Status.OPTIMAL_SOLUTION:
         # Chip height
         chip_h = result['objective']
-        # Blocks' positions
+        # Circuits' positions
         bl_x = result['bl_x']
         bl_y = result['bl_y']
         # Enter if rotation is enabled
         if rotation:
-            # New blocks' widths and heigths
+            # New circuits' widths and heigths
             inst_x = result['new_inst_x']
             inst_y = result['new_inst_y']
         # Computation time
@@ -115,6 +116,7 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
         time = 0
         # Print failure status
         print("FAIL " + str(file))
+    
     return time
 
 
@@ -145,8 +147,10 @@ def sat_wrapper(file, data, timeout, rotation):
     inst_x = data['inst_x']
     inst_y = data['inst_y']
     min_index = data['min_index']
+
     # Call SAT solver
     chip_h, bl_x, bl_y, inst_x, inst_y, time = sat(data, timeout, rotation)
+
     # Enter if a result is found
     if chip_h:
         # Write output
@@ -190,8 +194,10 @@ def smt_wrapper(file, data, timeout, rotation):
     chip_w = data['chip_w']
     n = data['n']
     min_index = data['min_index']
+
     # Call SMT solver
     chip_h, bl_x, bl_y, inst_x, inst_y, time = smt(data, timeout, rotation)
+    
     # Enter if a result is found
     if chip_h:
         # Write output

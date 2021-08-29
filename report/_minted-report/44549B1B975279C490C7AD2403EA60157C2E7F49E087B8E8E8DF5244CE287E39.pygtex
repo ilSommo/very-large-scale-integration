@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{chip\PYGZus{}w}\PYG{p}{):}
+    \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{max\PYGZus{}h}\PYG{p}{):}
+        \PYG{n}{temp\PYGZus{}chip} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{n}{temp\PYGZus{}corners} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+            \PYG{n}{temp\PYGZus{}chip}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{chip}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{][}\PYG{n}{k}\PYG{p}{])}
+            \PYG{n}{temp\PYGZus{}corners}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{corners}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{][}\PYG{n}{k}\PYG{p}{])}
+        \PYG{n}{opt}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{at\PYGZus{}most\PYGZus{}one}\PYG{p}{(}\PYG{n}{temp\PYGZus{}chip}\PYG{p}{))}
+        \PYG{n}{opt}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{at\PYGZus{}most\PYGZus{}one}\PYG{p}{(}\PYG{n}{temp\PYGZus{}corners}\PYG{p}{))}
+\end{Verbatim}
