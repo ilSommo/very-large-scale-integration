@@ -48,20 +48,20 @@ def smt(data, timeout, rotation):
     opt.set('timeout', timeout * 1000)
 
     # Circuits' positions
-    bl_x = z3.IntVector("bl_x", n)
-    bl_y = z3.IntVector("bl_y", n)
+    bl_x = z3.IntVector('bl_x', n)
+    bl_y = z3.IntVector('bl_y', n)
 
     # Chip height
-    chip_h = z3.Int("chip_h")
+    chip_h = z3.Int('chip_h')
 
     # Add chip height constraints
-    opt.add(chip_h <= max_h)
     opt.add(chip_h >= min_h)
+    opt.add(chip_h <= max_h)
 
     # Enter if rotation is enabled
     if rotation:
         # Boolean vector to flag rotated circuits
-        rotated = z3.BoolVector("rotated", n)
+        rotated = z3.BoolVector('rotated', n)
         # Actual circuits' widths and heights
         new_inst_x = [z3.If(rotated[k], inst_y[k], inst_x[k])
                       for k in range(n)]

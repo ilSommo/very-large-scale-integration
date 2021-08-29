@@ -70,14 +70,14 @@ def plot_chip(file, width, height, circuits, min_index):
     ax.set_ylim(0, height)
     ax.set_xticks(range(width + 1))
     ax.set_yticks(range(height + 1))
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
     # Draw grid
     ax.grid(color='black', zorder=0)
     # Set plot title
     plt.title(str(file))
     # Save plot
-    plt.savefig("out/out-" + file + ".png")
+    plt.savefig('out/out-' + file + '.png')
     # Close plot
     plt.close()
 
@@ -220,7 +220,7 @@ def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
         Flag to plot rotation times.
     """
     # Bar labels
-    labels = ["cp", "cp-rot", "sat", "sat-rot", "smt", "smt-rot"]
+    labels = ['cp', 'cp-rot', 'sat', 'sat-rot', 'smt', 'smt-rot']
     # Bar colors
     colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
     # Plot configuration
@@ -258,15 +258,15 @@ def plot_times(times, min_ins, max_ins, top, normal, rotation,name):
                 max_ins + (1 - TOTAL_WIDTH / 2))
     ax.set_ylim(0.001,top)
     ax.set_xticks(range(min_ins, max_ins + 1))
-    ax.set_xlabel("instance")
-    ax.set_ylabel("seconds")
+    ax.set_xlabel('instance')
+    ax.set_ylabel('seconds')
     ax.grid(axis='y', which='both')
     ax.set_axisbelow(True)
     # Plot legend
     plt.legend(loc='best')
     # Set plot title
-    plt.title("Times")
+    plt.title('Times')
     # Save plot
-    plt.savefig("out/times"+name+".png")
+    plt.savefig('out/times'+name+'.png')
     # Close plot
     plt.close()

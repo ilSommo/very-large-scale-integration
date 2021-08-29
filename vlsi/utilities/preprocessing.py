@@ -70,7 +70,7 @@ def preprocessing(file):
         Processed data.
     """
     # Open input file
-    with open("ins/ins-" + file + ".txt", 'r') as infile:
+    with open('ins/ins-' + file + '.txt', 'r') as infile:
         # Width of chip
         chip_w = int(infile.readline().strip())
         # Number of circuits

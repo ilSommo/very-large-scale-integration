@@ -84,10 +84,10 @@ def sat(data, timeout, rotation):
 
     # Z3 optimizer
     opt = z3.Optimize()
-    opt.set("timeout", timeout * 1000)
+    opt.set('timeout', timeout * 1000)
 
     # Chip height
-    chip_h = z3.Int("chip_h")
+    chip_h = z3.Int('chip_h')
 
     # 3D boolean matrix of circuits' presence
     chip = np.empty((chip_w, max_h, n), dtype=z3.BoolRef)
@@ -97,7 +97,7 @@ def sat(data, timeout, rotation):
     # Enter if rotation is enabled
     if rotation:
         # Boolean vector to flag rotated circuits
-        rotated = z3.BoolVector("rotated", n)
+        rotated = z3.BoolVector('rotated', n)
         # Actual circuits' widths and heights
         new_inst_x = [z3.If(rotated[k], inst_y[k], inst_x[k])
                       for k in range(n)]
@@ -120,9 +120,9 @@ def sat(data, timeout, rotation):
             for k in range(n):
                 # Fill chip and corners matrices
                 chip[i][j][k] = z3.Bool(
-                    "chip_" + str(i) + "_" + str(j) + "_" + str(k))
+                    'chip_' + str(i) + '_' + str(j) + '_' + str(k))
                 corners[i][j][k] = z3.Bool(
-                    "corners_" + str(i) + "_" + str(j) + "_" + str(k))
+                    'corners_' + str(i) + '_' + str(j) + '_' + str(k))
                 # Boundaries consistency constraint
                 opt.add(
                     z3.Implies(

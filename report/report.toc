@@ -11,12 +11,12 @@
 \contentsline {section}{\numberline {3}Constraint Programming}{12}{section.3}
 \contentsline {subsection}{\numberline {3.1}Variables}{12}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Constraints}{12}{subsection.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}Boundaries consistency}{13}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.1}Boundaries consistency}{12}{subsubsection.3.2.1}
 \contentsline {subsubsection}{\numberline {3.2.2}Non-overlapping}{13}{subsubsection.3.2.2}
 \contentsline {subsubsection}{\numberline {3.2.3}Cumulative}{13}{subsubsection.3.2.3}
 \contentsline {subsubsection}{\numberline {3.2.4}Symmetry breaking}{14}{subsubsection.3.2.4}
 \contentsline {subsection}{\numberline {3.3}Rotation}{14}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}Search \& Restart}{15}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.4}Search and Restart}{15}{subsection.3.4}
 \contentsline {subsection}{\numberline {3.5}Results}{17}{subsection.3.5}
 \contentsline {section}{\numberline {4}Propositional Satisfiability}{19}{section.4}
 \contentsline {subsection}{\numberline {4.1}Variables}{19}{subsection.4.1}
@@ -30,7 +30,7 @@
 \contentsline {section}{\numberline {5}Satisfiability Modulo Theories}{24}{section.5}
 \contentsline {subsection}{\numberline {5.1}Variables}{24}{subsection.5.1}
 \contentsline {subsection}{\numberline {5.2}Constraints}{24}{subsection.5.2}
-\contentsline {subsubsection}{\numberline {5.2.1}Boundaries consistency \& domain reduction}{24}{subsubsection.5.2.1}
+\contentsline {subsubsection}{\numberline {5.2.1}Boundaries consistency and domain reduction}{24}{subsubsection.5.2.1}
 \contentsline {subsubsection}{\numberline {5.2.2}Non-overlapping}{25}{subsubsection.5.2.2}
 \contentsline {subsubsection}{\numberline {5.2.3}Symmetry breaking}{25}{subsubsection.5.2.3}
 \contentsline {subsection}{\numberline {5.3}Rotation}{25}{subsection.5.3}

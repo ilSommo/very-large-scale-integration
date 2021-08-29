@@ -34,14 +34,14 @@ def output(file, chip_w, chip_h, n, inst_x, inst_y, bl_x, bl_y):
         Circuits' vertical positions.
     """
     # Output string
-    output = str(chip_w) + " " + str(chip_h) + "\n" + str(n) + "\n"
+    output = str(chip_w) + ' ' + str(chip_h) + '\n' + str(n) + '\n'
     # Cycle for circuits
     for k in range(n):
         # Update output
-        output += str(inst_x[k]) + " " + str(inst_y[k]) + \
-            " " + str(bl_x[k]) + " " + str(bl_y[k]) + "\n"
+        output += str(inst_x[k]) + ' ' + str(inst_y[k]) + \
+            ' ' + str(bl_x[k]) + ' ' + str(bl_y[k]) + '\n'
     # Open output file
-    with open("out/out-" + file + ".txt", 'w') as outfile:
+    with open('out/out-' + file + '.txt', 'w') as outfile:
         # Write output on output file
         outfile.write(output)
 
@@ -70,7 +70,7 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
         Computation time in seconds.
     """
     # File name
-    file = file + "-cp" if rotation == False else file + "-cp-rot"
+    file = file + '-cp' if rotation == False else file + '-cp-rot'
     # Minizinc instance
     instance = Instance(solver, model)
     # Instance parameters
@@ -110,12 +110,12 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
         plot_chip(file, chip_w, chip_h, tuple(
             zip(inst_x, inst_y, bl_x, bl_y)), min_index)
         # Print completion status
-        print("DONE " + str(file) + ": " + str(time) + " s")
+        print('DONE ' + str(file) + ': ' + str(time) + ' s')
     else:
         # Null time
         time = 0
         # Print failure status
-        print("FAIL " + str(file))
+        print('FAIL ' + str(file))
     
     return time
 
@@ -140,7 +140,7 @@ def sat_wrapper(file, data, timeout, rotation):
         Computation time in seconds.
     """
     # File name
-    file = file + "-sat" if rotation == False else file + "-sat-rot"
+    file = file + '-sat' if rotation == False else file + '-sat-rot'
     # Instance parameters
     chip_w = data['chip_w']
     n = data['n']
@@ -159,12 +159,12 @@ def sat_wrapper(file, data, timeout, rotation):
         plot_chip(file, chip_w, chip_h, tuple(
             zip(inst_x, inst_y, bl_x, bl_y)), min_index)
         # Print completion status
-        print("DONE " + str(file) + ": " + str(time) + " s")
+        print('DONE ' + str(file) + ': ' + str(time) + ' s')
     else:
         # Null time
         time = 0
         # Print failure status
-        print("FAIL " + str(file))
+        print('FAIL ' + str(file))
 
     return time
 
@@ -189,7 +189,7 @@ def smt_wrapper(file, data, timeout, rotation):
         Computation time in seconds.
     """
     # File name
-    file = file + "-smt" if rotation == False else file + "-smt-rot"
+    file = file + '-smt' if rotation == False else file + '-smt-rot'
     # Instance parameters
     chip_w = data['chip_w']
     n = data['n']
@@ -206,11 +206,11 @@ def smt_wrapper(file, data, timeout, rotation):
         plot_chip(file, chip_w, chip_h, tuple(
             zip(inst_x, inst_y, bl_x, bl_y)), min_index)
         # Print completion status
-        print("DONE " + str(file) + ": " + str(time) + " s")
+        print('DONE ' + str(file) + ': ' + str(time) + ' s')
     else:
         # Null time
         time = 0
         # Print failure status
-        print("FAIL " + str(file))
+        print('FAIL ' + str(file))
 
     return time

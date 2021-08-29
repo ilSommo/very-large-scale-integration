@@ -63,17 +63,17 @@ times_smt_rotation = []
 times_null = []
 
 # Minizinc solver
-solver = Solver.lookup("chuffed")
+solver = Solver.lookup('chuffed')
 
 # Enter if normal configuration is enabled
 if TIMEOUT_CP_NORMAL !=0:
     # Minizinc normal model
-    model_normal = Model("src/cp/cp_normal.mzn")
+    model_normal = Model('src/cp/cp_normal.mzn')
 
 # Enter if rotation configuration is enabled
 if TIMEOUT_CP_ROTATION !=0:
     # Minizinc rotation model
-    model_rotation = Model("src/cp/cp_rotation.mzn")
+    model_rotation = Model('src/cp/cp_rotation.mzn')
 
 # Cycle instances
 for i in range(min_ins, max_ins + 1):
@@ -158,9 +158,6 @@ times = [
 normal = True if timeouts[0] or timeouts[2] or timeouts[4] else False
 rotation = True if timeouts[1] or timeouts[3] or timeouts[5] else False
 
-# Plot all times
-plot_times(times, min_ins, max_ins, top, normal, rotation,'')
-
 # Enter for report
 if REPORT == True:
     # Plot times combinations
@@ -169,3 +166,6 @@ if REPORT == True:
     plot_times([times_null,times_null,times_null,times_null,times_smt_normal,times_smt_rotation], min_ins, max_ins, top, True, True,'-smt')
     plot_times([times_cp_normal,times_null,times_sat_normal,times_null,times_smt_normal,times_null], min_ins, max_ins, top, True, False,'-normal')
     plot_times([times_null,times_cp_rotation,times_null,times_sat_rotation,times_null,times_smt_rotation], min_ins, max_ins, top, False, True,'-rotation')
+else:
+    # Plot all times
+    plot_times(times, min_ins, max_ins, top, normal, rotation,'')
