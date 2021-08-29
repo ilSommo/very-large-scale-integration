@@ -1,38 +1,39 @@
 include "globals.mzn";
 
 
+% Search & restart
 int: SEARCH_TYPE = 2;
 int: RESTART_TYPE = 4;
 
 % Chip width
 int: chip_w;
-% Number of blocks
+% Number of circuits
 int: n;
-% Blocks' range
+% Circuits' range
 set of int: RANGE = 1..n;
-% Blocks' widths and heights
+% Circuits' widths and heights
 array[RANGE] of int: inst_x;
 array[RANGE] of int: inst_y;
 % Minimum and maximum heights
 int: min_h;
 int: max_h;
-% Index of smallest block
+% Index of smallest circuit
 int: min_index;
-% Minimum block size
-int: min_size = min(inst_x ++ inst_y);
 
+% Minimum circuit size
+int: min_size = min(inst_x ++ inst_y);
 % Chip height
 var min_h..max_h: chip_h = max(i in RANGE )(bl_y[i] + new_inst_y[i]);
-% Blocks' positions
+% Circuits' positions
 array[RANGE] of var 0..(chip_w - min_size): bl_x;
 array[RANGE] of var 0..(max_h - min_size): bl_y;
 % Rotation flags
 array[RANGE] of var bool: rotated;
-% Actual blocks' widths and heights
+% Actual circuits' widths and heights
 array[RANGE] of var int: new_inst_x;
 array[RANGE] of var int: new_inst_y;
-new_inst_x = [if rotated[i] then inst_y[i] else inst_x[i] endif | i in RANGE];
-new_inst_y = [if rotated[i] then inst_x[i] else inst_y[i] endif | i in RANGE];
+new_inst_x = [if rotated[k] then inst_y[k] else inst_x[k] endif | k in RANGE];
+new_inst_y = [if rotated[k] then inst_x[k] else inst_y[k] endif | k in RANGE];
 
 % Symmetry breaking constraint
 constraint symmetry_breaking_constraint(((2 * bl_x[min_index] + new_inst_x[min_index]) <= chip_w) /\ ((2 * bl_y[min_index] + new_inst_y[min_index]) <= chip_h));
@@ -41,11 +42,11 @@ constraint symmetry_breaking_constraint(((2 * bl_x[min_index] + new_inst_x[min_i
 constraint diffn(bl_x, bl_y, new_inst_x, new_inst_y);
 
 % Boundaries consistency constraint
-constraint forall(i in RANGE) ((bl_x[i] + new_inst_x[i] <= chip_w) /\ (bl_y[i] + new_inst_y[i] <= max_h));
+constraint forall(i in RANGE) ((bl_x[i] + new_inst_x[i] <= chip_w) /\ (bl_y[i] + new_inst_y[i] <= chip_h));
 
 % Cumulative constraints
 constraint cumulative(bl_y, new_inst_y, new_inst_x, chip_w);
-constraint cumulative(bl_x, new_inst_x, new_inst_y, max_h);
+constraint cumulative(bl_x, new_inst_x, new_inst_y, chip_h);
 
 % Search type
 ann: search_ann = 
