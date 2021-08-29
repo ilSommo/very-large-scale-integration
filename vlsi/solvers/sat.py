@@ -1,4 +1,4 @@
-__version__ = '1.0.0-rc.4'
+__version__ = '1.0.0'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
 
@@ -128,8 +128,8 @@ def sat(data, timeout, rotation):
                     z3.Implies(
                         corners[i][j][k],
                         z3.And(
-                            i +new_inst_x[k] <= chip_w,
-                            j +new_inst_y[k]<= chip_h)))
+                            i + new_inst_x[k] <= chip_w,
+                            j + new_inst_y[k] <= chip_h)))
                 # Append non-overlapping constraints
                 temp_chip.append(chip[i][j][k])
                 temp_corners.append(corners[i][j][k])
@@ -137,14 +137,14 @@ def sat(data, timeout, rotation):
             opt.add(at_most_one(temp_chip))
             opt.add(at_most_one(temp_corners))
             symmetry_breaking.append(
-                z3.And(corners[i][j][min_index],z3.And(
-                        2 *i +
-                        new_inst_x[min_index] <= chip_w,
-                        2 *j +
-                        new_inst_y[min_index] <= chip_h)))
+                z3.And(corners[i][j][min_index], z3.And(
+                    2 * i +
+                    new_inst_x[min_index] <= chip_w,
+                    2 * j +
+                    new_inst_y[min_index] <= chip_h)))
     # Add symmetry breaking constraints
     opt.add(z3.Or(symmetry_breaking))
-   
+
     # Cycle circuits
     for k in range(n):
         # List of structural constraints
@@ -246,5 +246,5 @@ def sat(data, timeout, rotation):
         chip_h_int = None
     # Computation time
     computation_time = end - start
-    
+
     return chip_h_int, result_x, result_y, result_inst_x, result_inst_y, computation_time

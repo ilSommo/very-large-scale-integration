@@ -1,4 +1,4 @@
-__version__ = '1.0.0-rc.4'
+__version__ = '1.0.0'
 __author__ = 'Giacomo Berselli, Martino Pulici'
 
 
@@ -116,7 +116,7 @@ def cp_wrapper(file, data, solver, model, timeout, rotation):
         time = 0
         # Print failure status
         print('FAIL ' + str(file))
-    
+
     return time
 
 
@@ -197,7 +197,7 @@ def smt_wrapper(file, data, timeout, rotation):
 
     # Call SMT solver
     chip_h, bl_x, bl_y, inst_x, inst_y, time = smt(data, timeout, rotation)
-    
+
     # Enter if a result is found
     if chip_h:
         # Write output
