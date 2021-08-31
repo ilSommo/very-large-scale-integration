@@ -12,6 +12,7 @@ z3-solver = "*"
 [dev-packages]
 autopep8 = "*"
 pdoc = "*"
+pygments = "*"
 
 [requires]
 python_version = "3.9"
